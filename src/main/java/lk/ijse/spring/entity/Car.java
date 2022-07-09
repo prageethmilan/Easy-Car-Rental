@@ -29,14 +29,10 @@ public class Car {
     private String transmissionType;
     private String fuelType;
     private String color;
-    @Lob
-    private byte[] frontView;
-    @Lob
-    private byte[] backView;
-    @Lob
-    private byte[] sideView;
-    @Lob
-    private byte[] internalView;
+    private String frontViewImg;
+    private String backViewImg;
+    private String sideViewImg;
+    private String internalViewImg;
     private double dailyRate;
     private double monthlyRate;
     private double freeKmForPrice;

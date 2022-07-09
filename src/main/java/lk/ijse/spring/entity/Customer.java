@@ -26,13 +26,10 @@ public class Customer {
     private int contactNo;
     private String email;
     private String nicNo;
-    @Lob
-    private byte[] nicFront;
-    @Lob
-    private byte[] nicBack;
+    private String nicFrontImg;
+    private String nicBackImg;
     private String licenceNo;
-    @Lob
-    private byte[] licenceImg;
+    private String licenceImg;
     private String username;
     private String password;
 
