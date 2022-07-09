@@ -69,4 +69,25 @@ public class AdminServiceImpl implements AdminService {
         return mapper.map(repo.findAll(), new TypeToken<List<AdminDTO>>() {
         }.getType());
     }
+
+    @Override
+    public String generateAdminId() {
+        String lastId = repo.generateAdminId();
+        String id = "";
+
+        if (lastId != null) {
+            int tempId = Integer.parseInt(lastId.split("-")[1]);
+            tempId = tempId + 1;
+            if (tempId <= 9) {
+                id = "Ad-00" + tempId;
+            } else if (tempId <= 99) {
+                id = "Ad-0" + tempId;
+            } else if (tempId <= 999) {
+                id = "Ad-" + tempId;
+            }
+        } else {
+            id = "Ad-001";
+        }
+        return id;
+    }
 }

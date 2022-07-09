@@ -20,4 +20,6 @@ public interface AdminService {
     boolean findAdminByPassWord(String password);
 
     List<AdminDTO> getAllAdmins();
+
+    String generateAdminId();
 }
