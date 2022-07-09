@@ -5,10 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +26,13 @@ public class Customer {
     private int contactNo;
     private String email;
     private String nicNo;
+    @Lob
+    private byte[] nicFront;
+    @Lob
+    private byte[] nicBack;
     private String licenceNo;
+    @Lob
+    private byte[] licenceImg;
     private String username;
     private String password;
 
