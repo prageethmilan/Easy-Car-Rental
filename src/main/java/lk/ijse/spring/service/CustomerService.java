@@ -35,4 +35,6 @@ public interface CustomerService {
     List<CustomerDTO> getAllAcceptedCustomers();
 
     void uploadCustomerImages(String nicfPath, String nicbPath, String licenceImgPath, String id);
+
+    int getCountOfCustomersRegistered();
 }

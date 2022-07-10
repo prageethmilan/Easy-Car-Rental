@@ -92,7 +92,7 @@ public class CustomerController {
         return new ResponseUtil(200, "Ok", service.getAllAcceptedCustomers());
     }
 
-    @PostMapping(path = "/up/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(path = "/up/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseUtil uploadImagesAndPath(@RequestPart("nicf") MultipartFile nicf, @RequestPart("nicb") MultipartFile nicb, @RequestPart("licenceImg") MultipartFile licenceImg, @PathVariable String id) {
         try {
             String projectPath = String.valueOf(new File("/media/prageeth/Disk D/ProjectFiles/Easy_Car_Rent"));
@@ -114,5 +114,10 @@ public class CustomerController {
             e.printStackTrace();
             return new ResponseUtil(500, "Error", null);
         }
+    }
+
+    @GetMapping(path = "/count",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil getCountOfRegisteredCustomers(){
+        return new ResponseUtil(200,"Ok",service.getCountOfCustomersRegistered());
     }
 }

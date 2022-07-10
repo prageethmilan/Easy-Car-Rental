@@ -87,4 +87,9 @@ public class DriverController {
     public ResponseUtil getAllNonAvailableDrivers(){
         return new ResponseUtil(200,"Ok",service.getAllNonAvailableDrivers());
     }
+
+    @GetMapping(path = "/count/{availability}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil getCountOfCustomersByAvailability(@PathVariable boolean availability){
+        return new ResponseUtil(200,"Ok",service.getCountOfDriversByStatus(availability));
+    }
 }

@@ -135,4 +135,9 @@ public class CustomerServiceImpl implements CustomerService {
             throw new RuntimeException("Customer Not Found");
         }
     }
+
+    @Override
+    public int getCountOfCustomersRegistered() {
+        return repo.countByCustomerId();
+    }
 }

@@ -113,4 +113,11 @@ public class DriverServiceImpl implements DriverService {
         return mapper.map(repo.getAllNonAvailableDrivers(), new TypeToken<List<DriverDTO>>() {
         }.getType());
     }
+
+    @Override
+    public int getCountOfDriversByStatus(boolean availability) {
+        return repo.getCountOfDriversByStatus(availability);
+    }
+
+
 }
