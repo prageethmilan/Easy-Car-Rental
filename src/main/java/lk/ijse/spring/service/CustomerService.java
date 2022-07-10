@@ -27,4 +27,12 @@ public interface CustomerService {
     CustomerDTO findCustomerByUsernameAndPassword(String username, String password);
 
     String generateCustomerId();
+
+    void updateCustomerStatus(String id);
+
+    List<CustomerDTO> getAllPendingCustomers();
+
+    List<CustomerDTO> getAllAcceptedCustomers();
+
+    void uploadCustomerImages(String nicfPath, String nicbPath, String licenceImgPath, String id);
 }

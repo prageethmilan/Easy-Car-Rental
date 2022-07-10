@@ -105,4 +105,34 @@ public class CustomerServiceImpl implements CustomerService {
         }
         return id;
     }
+
+    @Override
+    public void updateCustomerStatus(String id) {
+        if (repo.existsById(id)) {
+            repo.updateCustomerStatus(id);
+        } else {
+            throw new RuntimeException("Customer Not Found");
+        }
+    }
+
+    @Override
+    public List<CustomerDTO> getAllPendingCustomers() {
+        return mapper.map(repo.findPendingCustomers(), new TypeToken<List<CustomerDTO>>() {
+        }.getType());
+    }
+
+    @Override
+    public List<CustomerDTO> getAllAcceptedCustomers() {
+        return mapper.map(repo.findAcceptedCustomers(), new TypeToken<List<CustomerDTO>>() {
+        }.getType());
+    }
+
+    @Override
+    public void uploadCustomerImages(String nicfPath, String nicbPath, String licenceImgPath, String id) {
+        if (repo.existsById(id)) {
+            repo.updateCustomerFilePaths(nicfPath, nicbPath, licenceImgPath, id);
+        } else {
+            throw new RuntimeException("Customer Not Found");
+        }
+    }
 }
