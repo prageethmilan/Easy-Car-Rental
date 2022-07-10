@@ -21,5 +21,5 @@ public class DriverDTO {
     private String nicNo;
     private String username;
     private String password;
-    private boolean availability;
+    private final boolean availability = true;
 }

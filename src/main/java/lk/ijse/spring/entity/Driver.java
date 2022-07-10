@@ -30,7 +30,7 @@ public class Driver {
     private String nicNo;
     private String username;
     private String password;
-    private boolean availability;
+    private final boolean availability = true;
 
     @OneToMany(mappedBy = "driver",cascade = CascadeType.ALL)
     private List<CarRent> rentals = new ArrayList<>();

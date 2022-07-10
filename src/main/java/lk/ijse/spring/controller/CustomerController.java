@@ -25,77 +25,75 @@ public class CustomerController {
     CustomerService service;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseUtil getAllCustomers(){
-        return new ResponseUtil(200,"Ok",service.getAllCustomers());
+    public ResponseUtil getAllCustomers() {
+        return new ResponseUtil(200, "Ok", service.getAllCustomers());
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseUtil saveCustomer(CustomerDTO dto){
+    public ResponseUtil saveCustomer(CustomerDTO dto) {
         service.saveCustomer(dto);
-        return new ResponseUtil(200,"Saved",null);
+        return new ResponseUtil(200, "Saved", null);
     }
 
     @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseUtil updateCustomer(@RequestBody CustomerDTO dto){
+    public ResponseUtil updateCustomer(@RequestBody CustomerDTO dto) {
         service.updateCustomer(dto);
-        return new ResponseUtil(200,"Updated",null);
+        return new ResponseUtil(200, "Updated", null);
     }
 
-    @DeleteMapping(params = {"id"},produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseUtil deleteCustomer(@RequestParam String id){
+    @DeleteMapping(params = {"id"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil deleteCustomer(@RequestParam String id) {
         service.deleteCustomer(id);
-        return new ResponseUtil(200,"Deleted",null);
+        return new ResponseUtil(200, "Deleted", null);
     }
 
-    @GetMapping(path = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseUtil searchCustomer(@PathVariable String id){
-        return new ResponseUtil(200,"Ok",service.searchCustomer(id));
+    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil searchCustomer(@PathVariable String id) {
+        return new ResponseUtil(200, "Ok", service.searchCustomer(id));
     }
 
-    @GetMapping(path = "/{username}/{password}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseUtil searchCustomerByUsernameAndPassword(@PathVariable String username, @PathVariable String password){
-        boolean b;
+    @GetMapping(path = "/{username}/{password}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil searchCustomerByUsernameAndPassword(@PathVariable String username, @PathVariable String password) {
         if (service.findCustomerByUsername(username)) {
             if (service.findCustomerByPassword(password)) {
-                b = true;
+                return new ResponseUtil(200, "Login Successful", null);
             } else {
-                b = false;
+                return new ResponseUtil(404, "Incorrect Password", null);
             }
         } else {
-            b = false;
+            return new ResponseUtil(404, "Incorrect Username", null);
         }
-        return new ResponseUtil(200, "Ok", b);
     }
 
-    @GetMapping(path = "/set/{username}/{password}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseUtil findCustomerByUsernameAndPassword(@PathVariable String username, @PathVariable String password){
-        return new ResponseUtil(200,"Ok",service.findCustomerByUsernameAndPassword(username,password));
+    @GetMapping(path = "/set/{username}/{password}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil findCustomerByUsernameAndPassword(@PathVariable String username, @PathVariable String password) {
+        return new ResponseUtil(200, "Ok", service.findCustomerByUsernameAndPassword(username, password));
     }
 
-    @GetMapping(path = "/generateCustomerId",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseUtil generateCustomerId(){
+    @GetMapping(path = "/generateCustomerId", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil generateCustomerId() {
         return new ResponseUtil(200, "Ok", service.generateCustomerId());
     }
 
-    @PutMapping(path = "/updateStatus/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseUtil updateCustomerStatus(@PathVariable String id){
+    @PutMapping(path = "/updateStatus/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil updateCustomerStatus(@PathVariable String id) {
         service.updateCustomerStatus(id);
-        return new ResponseUtil(200,"Updated Status",null);
+        return new ResponseUtil(200, "Updated Status", null);
     }
 
-    @GetMapping(path = "/pending",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseUtil getAllPendingCustomers(){
-        return new ResponseUtil(200,"Ok",service.getAllPendingCustomers());
+    @GetMapping(path = "/pending", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil getAllPendingCustomers() {
+        return new ResponseUtil(200, "Ok", service.getAllPendingCustomers());
     }
 
-    @GetMapping(path = "/accepted",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseUtil getAllAcceptedCustomers(){
-        return new ResponseUtil(200,"Ok",service.getAllAcceptedCustomers());
+    @GetMapping(path = "/accepted", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil getAllAcceptedCustomers() {
+        return new ResponseUtil(200, "Ok", service.getAllAcceptedCustomers());
     }
 
-    @PostMapping(path = "/up/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseUtil uploadImagesAndPath(@RequestPart("nicf") MultipartFile nicf,@RequestPart("nicb") MultipartFile nicb,@RequestPart("licenceImg") MultipartFile licenceImg,@PathVariable String id){
+    @PostMapping(path = "/up/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil uploadImagesAndPath(@RequestPart("nicf") MultipartFile nicf, @RequestPart("nicb") MultipartFile nicb, @RequestPart("licenceImg") MultipartFile licenceImg, @PathVariable String id) {
         try {
             String projectPath = String.valueOf(new File("/media/prageeth/Disk D/ProjectFiles/Easy_Car_Rent"));
             File uploadsDir = new File(projectPath + "/Customers");
@@ -108,13 +106,13 @@ public class CustomerController {
             String nicbPath = projectPath + "/Customers/" + nicb.getOriginalFilename();
             String licenceImgPath = projectPath + "/Customers/" + licenceImg.getOriginalFilename();
 
-            service.uploadCustomerImages(nicfPath,nicbPath,licenceImgPath,id);
+            service.uploadCustomerImages(nicfPath, nicbPath, licenceImgPath, id);
 
-            return new ResponseUtil(200,"Uploaded",null);
+            return new ResponseUtil(200, "Uploaded", null);
 
         } catch (IOException e) {
             e.printStackTrace();
-            return new ResponseUtil(500,"Error",null);
+            return new ResponseUtil(500, "Error", null);
         }
     }
 }

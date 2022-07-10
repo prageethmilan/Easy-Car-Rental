@@ -46,17 +46,15 @@ public class AdminController {
 
     @GetMapping(path = "/{username}/{password}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseUtil searchAdminByUsernameAndPassword(@PathVariable String username, @PathVariable String password) {
-        boolean b;
         if (service.findAdminByUserName(username)) {
             if (service.findAdminByPassWord(password)) {
-                b = true;
+                return new ResponseUtil(200, "Login Successful", null);
             } else {
-                b = false;
+                return new ResponseUtil(404, "Incorrect Password", null);
             }
         } else {
-            b = false;
+            return new ResponseUtil(404, "Incorrect Username", null);
         }
-        return new ResponseUtil(200, "Ok", b);
     }
 
     @GetMapping(path = "/generateAdminID")
