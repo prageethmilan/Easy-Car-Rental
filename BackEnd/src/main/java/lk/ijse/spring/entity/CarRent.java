@@ -22,7 +22,7 @@ import java.time.LocalDate;
 @Entity
 public class CarRent {
     @Id
-    private String rentId;
+    private String rent;
     private LocalDate date;
     private LocalDate pickUpDate;
     private LocalDate returnDate;
