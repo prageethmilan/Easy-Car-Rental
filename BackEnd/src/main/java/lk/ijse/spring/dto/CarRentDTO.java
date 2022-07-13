@@ -20,7 +20,7 @@ public class CarRentDTO {
     private LocalDate date;
     private LocalDate pickUpDate;
     private LocalDate returnDate;
-    private String status;
+    private final String status = "Pending";
     private CustomerDTO customer;
     private CarDTO car;
     private DriverDTO driver;

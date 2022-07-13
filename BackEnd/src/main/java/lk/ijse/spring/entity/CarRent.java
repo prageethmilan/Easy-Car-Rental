@@ -26,7 +26,7 @@ public class CarRent {
     private LocalDate date;
     private LocalDate pickUpDate;
     private LocalDate returnDate;
-    private String status;
+    private final String status = "Pending";
 
     @ManyToOne
     @JoinColumn(name = "customerId", referencedColumnName = "customerId", nullable = false)

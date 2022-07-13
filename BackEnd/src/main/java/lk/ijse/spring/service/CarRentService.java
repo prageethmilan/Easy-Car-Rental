@@ -5,4 +5,5 @@ package lk.ijse.spring.service;
  * @created : 07/07/2022 - 7:23 PM
  **/
 public interface CarRentService {
+
 }
