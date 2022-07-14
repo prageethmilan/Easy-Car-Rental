@@ -64,4 +64,9 @@ public class CarRentController {
     public ResponseUtil getAllCarRentsByDrivingLicence(@PathVariable String status, @PathVariable String licenceNo) {
         return new ResponseUtil(200, "Ok", service.getCarRentsByDrivingLicenceNo(status, licenceNo));
     }
+
+    @GetMapping(path = "/generateRentId", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil generateRentId() {
+        return new ResponseUtil(200, "Ok", service.generateRentId());
+    }
 }

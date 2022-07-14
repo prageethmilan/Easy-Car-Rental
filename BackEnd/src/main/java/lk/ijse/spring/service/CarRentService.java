@@ -19,6 +19,8 @@ public interface CarRentService {
 
     List<CarRentDTO> getAllCarRents();
 
+    String generateRentId();
+
     void updateCarRentStatus(String rentId, String status);
 
     List<CarRentDTO> getCarRentsByStatus(String status);
