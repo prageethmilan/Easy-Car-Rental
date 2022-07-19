@@ -76,3 +76,19 @@ html body{
 .changeColor{
     color: #eeff00;
 }
+
+.login_container{
+    background: url("../images/3.jpg");
+    background-size: cover;
+    background-position: center;
+}
+.taxi_png{
+    width: 100%;
+    height: 100%;
+}
+.img_div{
+    border-right: gray solid 1px;
+}
+.signupBtn_div{
+
+}
