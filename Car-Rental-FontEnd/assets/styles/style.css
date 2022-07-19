@@ -1,0 +1,78 @@
+html {
+    scroll-behavior: smooth;
+}
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #FFF200;
+}
+
+html body{
+    overflow-x: hidden;
+}
+.homePage{
+    background: url("../images/2.jpg");
+    background-size: cover;
+    background-position: center;
+}
+.welcomeBanner{
+    width: fit-content;
+    height: fit-content;
+    position: absolute;
+    left: 50%;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+.welcomeBanner>h1{
+    color: white;
+    font-size: 6vw;
+    text-align: center;
+}
+.welcomeBanner>h2{
+    color: white;
+    text-align: center;
+    font-size: 3vw;
+}
+#header {
+    height: 80px;
+    box-shadow: 0 4px 10px -3px rgba(191, 191, 191, 0.5);
+    position: fixed;
+    width: 100%;
+
+}
+.navbar {
+    height: 80px;
+    /*background: rgba(189, 0, 0, 0.8) top;*/
+    background: white;
+    opacity: 0.5;
+    overflow: hidden;
+}
+#navSection {
+    box-shadow: 0 4px 10px -3px rgba(191, 191, 191, 0.5);
+
+}
+
+.navbar li {
+    font-size: 20px;
+    padding: 10px;
+    text-transform: uppercase;
+    justify-content: space-around;
+}
+
+.navbar li .nav-link {
+    color: black;
+    opacity: 1;
+}
+
+.navbar li .nav-link:hover {
+    color: #002aff;
+    text-decoration: underline;
+    text-decoration-color: #002aff;
+}
+.changeColor{
+    color: #eeff00;
+}
