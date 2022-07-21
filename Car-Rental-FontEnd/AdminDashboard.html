@@ -391,12 +391,144 @@
                             </table>
 
                         </div>
-
-
-
                     </div>
 
+                    <div class="tab-pane fade" id="v-tabs-customer" role="tabpanel"
+                         aria-labelledby="v-tabs-customer-tab">
+                        <div class="row text-center"><h1 class="h1 display-5">Customer Details</h1></div>
+                        <div class="row ms-0 me-0">
+                            <h3 class="h3  p-2 m-3 bg-success text-white">Customer Details</h3>
+                            <div class="col-2">
+                                <div class="mb-3">
+                                    <label for="txtCustomerId" class="form-label mb-0">Customer ID</label>
+                                    <input type="text" class="form-control" id="txtCustomerId" name="customerId"
+                                           disabled>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="mb-3">
+                                    <label for="txtCustomerName" class="form-label mb-0">Customer Name</label>
+                                    <input type="text" class="form-control" id="txtCustomerName" name="customerName">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="mb-3">
+                                    <label for="txtCustomerAddress" class="form-label mb-0">Customer Address</label>
+                                    <input type="text" class="form-control" id="txtCustomerAddress"
+                                           name="customerAddress">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="mb-3">
+                                    <label for="txtCustomerContactNo" class="form-label mb-0">Customer Contact</label>
+                                    <input type="text" class="form-control" id="txtCustomerContactNo"
+                                           name="customerContactNo">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="mb-3">
+                                    <label for="txtCustomerEmail" class="form-label mb-0">Customer Email</label>
+                                    <input type="text" class="form-control" id="txtCustomerEmail" name="customerEmail">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="mb-3">
+                                    <label for="txtCustomerNICNo" class="form-label mb-0">Customer NIC No</label>
+                                    <input type="text" class="form-control" id="txtCustomerNICNo" name="customerNICNo">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row ms-0 me-0">
+                            <div class="col-2">
+                                <div class="mb-3">
+                                    <label for="txtCustomerLicenceNo" class="form-label mb-0">Customer Licence
+                                        No</label>
+                                    <input type="text" class="form-control" id="txtCustomerLicenceNo"
+                                           name="customerLicenceNo">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label mb-0">NIC Front View</label>
+                                <div class="mb-3" id="divNICFrontView" style="height: 13vh; border: #00e5ff 2px solid">
 
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label mb-0">NIC Back View</label>
+                                <div class="mb-3" id="divNICBackView" style="height: 13vh; border: #00e5ff 2px solid">
+
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label mb-0">Licence Img</label>
+                                <div class="mb-3" id="divLicenceImg" style="height: 13vh; border: #00e5ff 2px solid">
+
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <button type="button" class="btn btn-warning mt-3 " id="btnUpdateCustomer">Update
+                                </button>
+                                <button type="button" class="btn btn-success mt-3" id="btnAcceptCustomer">Accept
+                                </button>
+                                <button type="button" class="btn btn-danger mt-3" id="btnRejectCustomer">Reject</button>
+                                <button type="button" class="btn btn-secondary mt-3" id="btnClearFields">Clear</button>
+                            </div>
+                        </div>
+                        <div class="row ms-0 me-0">
+                            <h3 class="h3  p-2 bg-success text-white">Pending Customers</h3>
+                        </div>
+                            <div class="bg-light row overflow-scroll" style="height: 20vh">
+                                <table class="table table-hover table-bordered table-striped" id="pendingCustomerTbl">
+                                    <thead class="bg-info">
+                                    <tr>
+                                        <th>Customer ID</th>
+                                        <th>Name</th>
+                                        <th>Address</th>
+                                        <th>Contact No</th>
+                                        <th>Email</th>
+                                        <th>NIC No</th>
+                                        <th>Licence No</th>
+                                        <th>Status</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="tblPendingCustomers">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="row ms-0 me-0">
+                            <h3 class="h3  p-2 bg-success text-white">Registered Customers</h3>
+                        </div>
+                        <div class="row ml-0 mr-0 mt-2 mb-2 align-content-end ">
+                            <div class="input-group d-flex align-items-center justify-content-center">
+                                <div class="col-2">
+                                    <input type="text" id="searchCustomer" class="form-control" placeholder="Search"/>
+                                </div>
+                                <button type="button" class="btn btn-primary" id="btnSearchCustomer">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="bg-light row overflow-scroll" style="height: 27vh">
+                            <table class="table table-hover table-bordered table-striped" id="registeredCustomerTbl">
+                                <thead class="bg-info">
+                                <tr>
+                                    <th>Customer ID</th>
+                                    <th>Name</th>
+                                    <th>Address</th>
+                                    <th>Contact No</th>
+                                    <th>Email</th>
+                                    <th>NIC No</th>
+                                    <th>Licence No</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tblRegisteredCustomers">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
