@@ -21,10 +21,6 @@ public class Payment {
     @Id
     private String paymentId;
     private LocalDate date;
-    private String accountNo;
-    private String accountHolderName;
-    private String bankName;
-    private String branchName;
     private double amount;
 
     @OneToOne(cascade = CascadeType.ALL)
