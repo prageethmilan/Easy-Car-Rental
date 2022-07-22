@@ -1087,6 +1087,81 @@
                     </div>
                     <div class="tab-pane fade" id="v-tabs-income" role="tabpanel" aria-labelledby="v-tabs-income-tab">
                         <div class="row text-center"><h1 class="h1 display-5">Income Reports</h1></div>
+                        <div class="row m-3">
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                                <div>
+                                    <label for="incomeFromDate" class="form-label">From</label>
+                                    <input type="date" id="incomeFromDate" class="form-control" name="incomeFromDate"
+                                           placeholder="Start Date">
+                                </div>
+                                <div>
+                                    <label for="incomeToDate" class="form-label">To</label>
+                                    <input type="date" id="incomeToDate" class="form-control" name="incomeToDate"
+                                           placeholder="End Date">
+                                </div>
+                                <button type="button" class="btn btn-primary mt-3" id="btnSearchIncome">Search</button>
+                            </div>
+                        </div>
+                        <div class="row ms-0 me-0">
+                            <h3 class="h3  p-2 m-3 text-dark text-center">Payments</h3>
+                        </div>
+                        <div class="bg-light row overflow-scroll" style="height: 20vh">
+                            <table class="table table-hover table-bordered table-striped" id="paymentsInDateRangeTbl">
+                                <thead class="bg-dark text-white">
+                                <tr>
+                                    <th>Payment ID</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Rent ID</th>
+                                    <th>Customer ID</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tblPaymentsInDateRange">
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row ms-0 me-0">
+                            <h3 class="h3  p-2 m-3 text-dark text-center">Maintenances</h3>
+                        </div>
+                        <div class="bg-light row overflow-scroll" style="height: 20vh">
+                            <table class="table table-hover table-bordered table-striped" id="maintenancesInDateRangeTbl">
+                                <thead class="bg-dark text-white">
+                                <tr>
+                                    <th>Maintenance ID</th>
+                                    <th>Date</th>
+                                    <th>Cost</th>
+                                    <th>Details</th>
+                                    <th>Registration No</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tblMaintenancesInDateRange">
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row ms-0 me-0">
+                            <div class="col-6">
+                                <label class="h4 text-primary">Total Income = </label>
+                                <label class="h4 text-danger">Total Payments - </label>
+                                <label class="h4 text-danger">Total Maintenances Cost</label>
+                            </div>
+                        </div>
+                        <div class="row ms-0 me-0">
+                            <div class="col-6">
+                                <label class="h4 text-primary">Total Income = </label>
+                                <label class="h4 text-danger" id="lblTotalPayments"></label>
+                                <label class="h4 text-danger" > - </label>
+                                <label class="h4 text-danger" id="lblTotalMaintenanceCost"></label>
+                            </div>
+                        </div>
+                        <div class="row ms-0 me-0">
+                            <div class="col-6">
+                                <label class="h4 text-primary">Total Income = </label>
+                                <label class="h4 text-danger">Rs. </label>
+                                <label class="h4 text-danger" id="lblTotalIncome"></label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
