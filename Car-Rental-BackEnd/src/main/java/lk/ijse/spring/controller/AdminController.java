@@ -27,7 +27,8 @@ public class AdminController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseUtil saveAdmin(AdminDTO dto) {
+    public ResponseUtil saveAdmin(@RequestBody AdminDTO dto) {
+        System.out.println(dto.toString());
         service.saveAdmin(dto);
         return new ResponseUtil(200, "Saved", null);
     }

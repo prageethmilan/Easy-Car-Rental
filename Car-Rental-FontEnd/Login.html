@@ -25,12 +25,12 @@
                         <form id="loginForm">
                             <div>
                                 <label for="txtUserName" class="form-label fw-bold mb-0">User Name</label>
-                                <input class="form-control border-dark" id="txtUserName" name="userName" type="text">
+                                <input class="form-control" id="txtUserName" name="userName" type="text">
                                 <p><small class="text-danger" id="userNameError"></small></p>
                             </div>
                             <div>
                                 <label for="txtPassword" class="form-label fw-bold mb-0">Password</label>
-                                <input class="form-control border-dark" id="txtPassword" name="password"
+                                <input class="form-control" id="txtPassword" name="password"
                                        type="password">
                                 <p><small class="text-danger" id="passwordError"></small></p>
                             </div>
@@ -42,10 +42,9 @@
                                     <option value="Driver">Driver</option>
                                     <option value="Customer">Customer</option>
                                 </select>
-                                <p><small class="text-danger" id="userTypeError"></small></p>
                             </div>
                             <div class="btn-group mt-3 " style="display: flex">
-                                <button class="btn btn-primary " id="btnLogin" type="button">Login</button>
+                                <button class="btn btn-primary " id="btnLogin" type="button" disabled>Login</button>
                             </div>
                             <hr>
                         </form>
@@ -70,7 +69,7 @@
             <div class="modal-header">
                 <h3 class="modal-title text-primary" id="exampleModalLongTitle">Sign Up</h3>
                 <div class="form-row align-content-end">
-                    <input type="text" class="form-control" id="custID" hidden>
+                    <input type="text" class="form-control" id="txtId" hidden name="id">
                 </div>
                 <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
@@ -175,5 +174,6 @@
 <script src="assets/bootstrap-5.1.3-dist/js/bootstrap.min.js"></script>
 <script src="assets/jQuery/jquery-3.6.0.min.js"></script>
 <script src="assets/Sweet%20Alert/sweetalert.min.js"></script>
+<script src="assets/scripts/LoginController.js"></script>
 </body>
 </html>
