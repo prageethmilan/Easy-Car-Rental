@@ -49,12 +49,12 @@ public class AdminController {
     public ResponseUtil searchAdminByUsernameAndPassword(@PathVariable String username, @PathVariable String password) {
         if (service.findAdminByUserName(username)) {
             if (service.findAdminByPassWord(password)) {
-                return new ResponseUtil(200, "Login Successful", null);
+                return new ResponseUtil(200, "Login Successful", true);
             } else {
-                return new ResponseUtil(404, "Incorrect Password", null);
+                return new ResponseUtil(404, "Incorrect Password", false);
             }
         } else {
-            return new ResponseUtil(404, "Incorrect Username", null);
+            return new ResponseUtil(404, "Incorrect Username", false);
         }
     }
 

@@ -7,6 +7,8 @@ let regEmail = /^[a-z0-9]{3,}(@)[a-z]{3,}(.)[a-z]{2,3}$/;
 let regDrivingLicenceNo = /^(B)[0-9]{7}$/;
 let regNicNo = /^[0-9]{9}(V)|[0-9]{12}$/;
 
+let baseUrl = "http://localhost:8080/Car_Rental_BackEnd_war/";
+
 $('#txtUserName,#txtPassword,#inputName,#inputContactNo,#inputAddress,#inputEmail,#inputDrivingLicence,#inputNIC,#inputUserName,#inputPassword,#inputfile1,#inputfile2,#inputfile3').on('keydown', function (event) {
     if (event.key == "Tab") {
         event.preventDefault();
@@ -139,7 +141,7 @@ function disableAllComponents() {
 
 function generateAdminId() {
     $.ajax({
-        url: "http://localhost:8080/Car_Rental_BackEnd_war/api/v1/admin/generateAdminID",
+        url: baseUrl + "api/v1/admin/generateAdminID",
         method: "GET",
         success: function (res) {
             $('#txtId').val(res.data);
@@ -149,7 +151,7 @@ function generateAdminId() {
 
 function generateCustomerId() {
     $.ajax({
-        url: "http://localhost:8080/Car_Rental_BackEnd_war/api/v1/customer/generateCustomerId",
+        url: baseUrl + "api/v1/customer/generateCustomerId",
         method: "GET",
         success: function (res) {
             $('#txtId').val(res.data);
@@ -388,7 +390,7 @@ function addCustomer() {
     }
 
     $.ajax({
-        url: "http://localhost:8080/Car_Rental_BackEnd_war/api/v1/customer",
+        url: baseUrl + "api/v1/customer",
         method: "POST",
         contentType: "application/json",
         data: JSON.stringify(customer),
@@ -430,7 +432,7 @@ function uploadCustomerImages(id) {
     data.append("licenceImg", fileObjectLicence, fileNameLicence);
 
     $.ajax({
-        url: "http://localhost:8080/Car_Rental_BackEnd_war/api/v1/customer/up/" + id,
+        url: baseUrl + "api/v1/customer/up/" + id,
         method: "PUT",
         async: true,
         contentType: false,
@@ -488,7 +490,7 @@ function addAdmin() {
     }
 
     $.ajax({
-        url: "http://localhost:8080/Car_Rental_BackEnd_war/api/v1/admin",
+        url: baseUrl + "api/v1/admin",
         method: "POST",
         contentType: "application/json",
         data: JSON.stringify(admin),
@@ -615,7 +617,96 @@ $('#btnCreate').click(function () {
     }
 });
 
-$('#btnClear').click(function (){
-   clearSignupTextFields();
+$('#btnClear').click(function () {
+    clearSignupTextFields();
 });
+
+$('#btnLogin').click(function () {
+    var userType = $('#cmbUserType').find('option:selected').text();
+
+    if ($('#txtUserName').val() != "" && $('#txtPassword').val() != "" && userType != "-Select User Type-") {
+        loginUser();
+    }
+
+
+});
+
+function loginUser() {
+    var username = $('#txtUserName').val();
+    var password = $('#txtPassword').val();
+    var userType = $('#cmbUserType').find('option:selected').text();
+
+    console.log(userType);
+
+    if (userType === "Admin") {
+        searchAdmin(userType, username, password);
+    } else if (userType === "Customer"){
+        searchCustomer(userType, username, password);
+    }
+}
+
+function loginSave(userType, username, password) {
+    let logId = $('#txtLogId').val();
+    console.log(logId);
+    $.ajax({
+        url: baseUrl + "api/v1/login",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(
+            {
+                loginId: logId,
+                username: username,
+                password: password,
+                role: userType
+            }
+        ),
+        success: function (res) {
+            console.log("Login data saved");
+        }
+    })
+}
+
+$(function () {
+   getNewLoginId();
+});
+
+function getNewLoginId() {
+    $.ajax({
+        url: baseUrl + "api/v1/login/generateLogId",
+        method: "GET",
+        success: function (res) {
+            $('#txtLogId').val(res.data);
+        }
+    });
+}
+
+function searchAdmin(userType, username, password) {
+    $.ajax({
+        url: baseUrl + "api/v1/admin/" + username + "/" + password,
+        method: "GET",
+        success: function (res) {
+            if (res.data === true) {
+                loginSave(userType, username, password);
+                location.replace("AdminDashboard.html");
+            } else {
+                alert("Login failed! Please check username,password and try again!...");
+            }
+        }
+    });
+}
+
+function searchCustomer(userType, username, password) {
+    $.ajax({
+        url:baseUrl + "api/v1/customer/" + username + "/" +password,
+        method:"GET",
+        success: function (res) {
+            if (res.data === true){
+                loginSave(userType,username,password);
+                location.replace("CustomerDashboard.html");
+            } else {
+                alert("Login failed! Please check username,password and try again!...");
+            }
+        }
+    })
+}
 
