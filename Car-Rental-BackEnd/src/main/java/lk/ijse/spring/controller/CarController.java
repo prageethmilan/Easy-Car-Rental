@@ -31,7 +31,7 @@ public class CarController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseUtil saveCar(CarDTO dto) {
+    public ResponseUtil saveCar(@RequestBody CarDTO dto) {
         service.saveCar(dto);
         return new ResponseUtil(200, "Saved", null);
     }
@@ -72,7 +72,7 @@ public class CarController {
     @PutMapping(path = "/up/{registrationID}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseUtil uploadImagesAndPath(@RequestPart("frontImg") MultipartFile frontImg, @RequestPart("backImg") MultipartFile backImg, @RequestPart("interImg") MultipartFile interImg, @RequestPart("sideImg") MultipartFile sideImg, @PathVariable String registrationID) {
         try {
-            String projectPath = String.valueOf(new File("/media/prageeth/Disk D/ProjectFiles/Easy_Car_Rent"));
+            String projectPath = String.valueOf(new File("/media/prageeth/Disk D/GitHub Projects/Easy-Car-Rental/Car-Rental-FontEnd/assets/savedImages"));
             File uploadsDir = new File(projectPath + "/Cars");
             uploadsDir.mkdir();
             frontImg.transferTo(new File(uploadsDir.getAbsolutePath() + "/" + frontImg.getOriginalFilename()));
