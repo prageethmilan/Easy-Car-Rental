@@ -69,4 +69,15 @@ public class CarRentController {
     public ResponseUtil generateRentId() {
         return new ResponseUtil(200, "Ok", service.generateRentId());
     }
+
+    @GetMapping(path = "/countTodayBookings/{today}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil getTodayBookingCount(@PathVariable String today){
+        System.out.println(today);
+        return new ResponseUtil(200,"Ok",service.getTodayBookingCount(today));
+    }
+
+    @GetMapping(path = "/getTodayBookings/{today}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil getTodayBookings(@PathVariable String today){
+        return new ResponseUtil(200,"Ok",service.getTodayBookings(today));
+    }
 }

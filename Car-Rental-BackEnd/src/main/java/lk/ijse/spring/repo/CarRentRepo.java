@@ -28,4 +28,10 @@ public interface CarRentRepo extends JpaRepository<CarRent, String> {
     @Query(value = "SELECT rentId FROM CarRent ORDER BY rentId DESC LIMIT 1",nativeQuery = true)
     String generateRentId();
 
+    @Query(value = "SELECT COUNT(rentId) FROM CarRent WHERE pickUpDate=:today",nativeQuery = true)
+    int getTodayBookingCount(@Param("today") String today);
+
+    @Query(value = "SELECT * FROM CarRent WHERE pickUpDate=:today",nativeQuery = true)
+    List<CarRent> getTodayBookings(@Param("today") String today);
+
 }

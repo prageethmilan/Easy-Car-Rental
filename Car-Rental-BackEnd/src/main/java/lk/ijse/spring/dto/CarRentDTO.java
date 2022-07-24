@@ -1,5 +1,6 @@
 package lk.ijse.spring.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,9 @@ import java.time.LocalDate;
 public class CarRentDTO {
     private String rentId;
     private LocalDate date;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate pickUpDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate returnDate;
     private final String status = "Pending";
     private CustomerDTO customer;

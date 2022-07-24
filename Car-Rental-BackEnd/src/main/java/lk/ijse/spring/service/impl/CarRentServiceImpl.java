@@ -111,4 +111,15 @@ public class CarRentServiceImpl implements CarRentService {
         return mapper.map(repo.getAllByDrivingLicenceNo(status, licenceNo), new TypeToken<List<CarRentDTO>>() {
         }.getType());
     }
+
+    @Override
+    public int getTodayBookingCount(String today) {
+        return repo.getTodayBookingCount(today);
+    }
+
+    @Override
+    public List<CarRentDTO> getTodayBookings(String today) {
+        return mapper.map(repo.getTodayBookings(today), new TypeToken<List<CarRentDTO>>() {
+        }.getType());
+    }
 }

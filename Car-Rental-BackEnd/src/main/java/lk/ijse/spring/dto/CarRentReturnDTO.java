@@ -1,5 +1,6 @@
 package lk.ijse.spring.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lk.ijse.spring.entity.CarRent;
 import lk.ijse.spring.entity.Payment;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ import java.time.LocalDate;
 @ToString
 public class CarRentReturnDTO {
     private String returnId;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
     private double noOfKm;
     private CarRentDTO rental;

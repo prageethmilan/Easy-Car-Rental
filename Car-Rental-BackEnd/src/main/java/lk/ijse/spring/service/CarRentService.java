@@ -26,4 +26,8 @@ public interface CarRentService {
     List<CarRentDTO> getCarRentsByStatus(String status);
 
     List<CarRentDTO> getCarRentsByDrivingLicenceNo(String status, String licenceNo);
+
+    int getTodayBookingCount(String today);
+
+    List<CarRentDTO> getTodayBookings(String today);
 }
