@@ -642,6 +642,8 @@ function loginUser() {
         searchAdmin(userType, username, password);
     } else if (userType === "Customer"){
         searchCustomer(userType, username, password);
+    } else if (userType === "Driver"){
+        searchDriver(userType,username,password);
     }
 }
 
@@ -689,7 +691,7 @@ function searchAdmin(userType, username, password) {
                 loginSave(userType, username, password);
                 location.replace("AdminDashboard.html");
             } else {
-                alert("Login failed! Please check username,password and try again!...");
+                alert(res.massage);
             }
         }
     });
@@ -705,7 +707,23 @@ function searchCustomer(userType, username, password) {
                 loginSave(userType,username,password);
                 location.replace("CustomerDashboard.html");
             } else {
-                alert("Login failed! Please check username,password and try again!...");
+                alert(res.massage);
+            }
+        }
+    })
+}
+
+function searchDriver(userType, username, password) {
+    $.ajax({
+        url:baseUrl + "api/v1/driver/" + username + "/" + password,
+        method:"GET",
+        success: function (res) {
+            console.log(res.data);
+            if (res.data === true){
+                loginSave(userType,username,password);
+                location.replace("DriverDashboard.html");
+            } else {
+                alert(res.massage);
             }
         }
     })
