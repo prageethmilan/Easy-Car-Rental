@@ -700,6 +700,7 @@ function searchCustomer(userType, username, password) {
         url:baseUrl + "api/v1/customer/" + username + "/" +password,
         method:"GET",
         success: function (res) {
+            console.log(res.data);
             if (res.data === true){
                 loginSave(userType,username,password);
                 location.replace("CustomerDashboard.html");
