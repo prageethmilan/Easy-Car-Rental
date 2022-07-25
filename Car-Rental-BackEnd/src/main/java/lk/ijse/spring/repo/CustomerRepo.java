@@ -42,4 +42,8 @@ public interface CustomerRepo extends JpaRepository<Customer, String> {
 
     @Query(value = "SELECT COUNT(customerId) FROM Customer WHERE status='Accepted'",nativeQuery = true)
     int countByCustomerId();
+
+    @Query(value = "SELECT * FROM Customer WHERE customerId=:customerId AND status='Accepted'",nativeQuery = true)
+    List<Customer> searchCustomer(@Param("customerId") String customerId);
+
 }

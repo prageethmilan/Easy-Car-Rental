@@ -49,7 +49,7 @@ public class CustomerController {
         return new ResponseUtil(200, "Deleted", null);
     }
 
-    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/register/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseUtil searchCustomer(@PathVariable String id) {
         return new ResponseUtil(200, "Ok", service.searchCustomer(id));
     }
