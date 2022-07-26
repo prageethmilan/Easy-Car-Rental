@@ -16,6 +16,7 @@ $(function () {
     loadAvailableDrivers();
     loadNonAvailableDrivers();
     loadAllDrivers();
+    loadAllRentals();
 });
 
 let today = new Date().toISOString().slice(0, 10);
@@ -1581,3 +1582,17 @@ $('#btnSearchDriver').click(function () {
         searchDriverDetails();
     }
 })
+
+function loadAllRentals() {
+    $('#tblCarRentals').empty();
+    $.ajax({
+        url:baseUrl + "api/v1/CarRent",
+        method:"GET",
+        success:function (res) {
+            for (const carRent of res.data) {
+                let row = `<tr><td>${carRent.rentId}</td><td>${carRent.date}</td><td>${carRent.pickUpDate}</td><td>${carRent.returnDate}</td><td>${carRent.car.registrationNO}</td><td>${carRent.customer.customerId}</td><td>${carRent.driver.licenceNo}</td><td>${carRent.status}</td></tr>`;
+                $('#tblCarRentals').append(row);
+            }
+        }
+    })
+}
