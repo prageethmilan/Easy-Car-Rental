@@ -122,4 +122,10 @@ public class CarRentServiceImpl implements CarRentService {
         return mapper.map(repo.getTodayBookings(today), new TypeToken<List<CarRentDTO>>() {
         }.getType());
     }
+
+    @Override
+    public List<CarRentDTO> getCarRentsByCustomerId(String customerId) {
+        return mapper.map(repo.getAllByCustomerId(customerId), new TypeToken<List<CarRentDTO>>() {
+        }.getType());
+    }
 }

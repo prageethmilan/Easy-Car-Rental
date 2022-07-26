@@ -94,4 +94,9 @@ public class CarController {
             return new ResponseUtil(500, "Error", null);
         }
     }
+
+    @GetMapping(path = "/getRegNo/{type}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil getCarRegistrationNoByType(@PathVariable String type){
+        return new ResponseUtil(200,"Ok",service.getCarRegistrationNumbersByType(type));
+    }
 }

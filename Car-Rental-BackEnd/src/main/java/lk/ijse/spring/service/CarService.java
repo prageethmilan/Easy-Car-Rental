@@ -26,4 +26,6 @@ public interface CarService {
     List<CarDTO> getAllCarsByStatus(String status);
 
     int getCountOfCarsByStatus(String status);
+
+    List<String> getCarRegistrationNumbersByType(String type);
 }

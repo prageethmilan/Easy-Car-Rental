@@ -80,4 +80,9 @@ public class CarRentController {
     public ResponseUtil getTodayBookings(@PathVariable String today){
         return new ResponseUtil(200,"Ok",service.getTodayBookings(today));
     }
+
+    @GetMapping(path = "/getMyCarRents/{customerId}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil getMyCarRents(@PathVariable String customerId){
+        return new ResponseUtil(200,"Ok",service.getCarRentsByCustomerId(customerId));
+    }
 }

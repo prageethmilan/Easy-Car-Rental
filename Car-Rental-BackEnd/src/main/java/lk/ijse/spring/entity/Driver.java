@@ -26,7 +26,7 @@ public class Driver {
     private String licenceNo;
     private String name;
     private String address;
-    private int contactNo;
+    private String contactNo;
     private String nicNo;
     private String username;
     private String password;

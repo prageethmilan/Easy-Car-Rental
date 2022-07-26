@@ -30,4 +30,6 @@ public interface CarRentService {
     int getTodayBookingCount(String today);
 
     List<CarRentDTO> getTodayBookings(String today);
+
+    List<CarRentDTO> getCarRentsByCustomerId(String customerId);
 }
