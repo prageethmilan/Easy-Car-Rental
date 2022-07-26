@@ -22,4 +22,5 @@ public class PaymentDTO {
     private LocalDate date;
     private double amount;
     private CarRentDTO rental;
+    private CustomerDTO customer;
 }

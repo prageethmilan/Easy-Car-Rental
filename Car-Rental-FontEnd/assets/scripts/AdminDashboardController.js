@@ -17,6 +17,7 @@ $(function () {
     loadNonAvailableDrivers();
     loadAllDrivers();
     loadAllRentals();
+    loadAllPayments();
 });
 
 let today = new Date().toISOString().slice(0, 10);
@@ -1595,4 +1596,68 @@ function loadAllRentals() {
             }
         }
     })
+}
+
+function loadAllPayments() {
+    $('#tblPayments').empty();
+    $.ajax({
+        url:baseUrl + "api/v1/payment",
+        method:"GET",
+        success:function (res) {
+            for (const payment of res.data) {
+                let row = `<tr><td>${payment.paymentId}</td><td>${payment.date}</td><td>${payment.amount}</td><td>${payment.rental.rentId}</td><td>${payment.customer.customerId}</td></tr>`;
+                $('#tblPayments').append(row);
+            }
+        }
+    })
+}
+
+$('#btnSearchPayment').click(function () {
+    if ($('#pickFromDate').val()!=""){
+        if ($('#pickToDate').val()!=""){
+            searchPaymentByDate();
+        } else {
+            alert("Please select to date");
+        }
+    } else {
+        alert("Please select from date");
+    }
+})
+
+function searchPaymentByDate() {
+    let fromDate = $('#pickFromDate').val();
+    let toDate = $('#pickToDate').val();
+
+    $('#tblPayments').empty();
+    $.ajax({
+        url:baseUrl + "api/v1/payment/" + fromDate + "/" + toDate,
+        method:"GET",
+        success:function (res) {
+            for (const payment of res.data) {
+                let row = `<tr><td>${payment.paymentId}</td><td>${payment.date}</td><td>${payment.amount}</td><td>${payment.rental.rentId}</td><td>${payment.customer.customerId}</td></tr>`;
+                $('#tblPayments').append(row);
+            }
+        },
+        error:function (ob) {
+            loadAllPayments();
+            clearPaymentDateFields();
+            swal({
+                title: "Error!",
+                text: "Payments Not Found",
+                icon: "error",
+                button: "Close",
+                timer: 2000
+            });
+        }
+    })
+}
+
+$('#btnClearDates').click(function () {
+    clearPaymentDateFields();
+})
+
+function clearPaymentDateFields() {
+    $('#pickFromDate').val("");
+    $('#pickToDate').val("");
+    loadAllPayments();
 }
