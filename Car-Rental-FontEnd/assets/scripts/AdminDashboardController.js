@@ -551,6 +551,7 @@ function addCar() {
     let lossDamageWavier = $('#txtLossDamageWaiver').val();
     let priceForExtraKm = $('#txtPriceForExtraKm').val();
     let completeKm = $('#txtCompleteKm').val();
+    let status = "Available";
 
     var car = {
         registrationNO: regNo,
@@ -566,7 +567,8 @@ function addCar() {
         freeKmForDuration: freeKmForDuration,
         lossDamageWaiver: lossDamageWavier,
         priceForExtraKm: priceForExtraKm,
-        completeKm: completeKm
+        completeKm: completeKm,
+        status: status
     }
 
     $.ajax({
@@ -929,6 +931,7 @@ function searchAndLoadCustomerImgs(id) {
             let nicFrontPath = customer.nicFrontImg;
             let nicFrontImg = nicFrontPath.split("/media/prageeth/Disk D/GitHub Projects/Easy-Car-Rental/Car-Rental-FontEnd/assets/savedImages/Customers/")[1];
             let nicFrontImgSrc = "assets/savedImages/Customers/" + nicFrontImg;
+            console.log(nicFrontImgSrc);
 
             let nicBackPath = customer.nicBackImg;
             let nicBackImg = nicBackPath.split("/media/prageeth/Disk D/GitHub Projects/Easy-Car-Rental/Car-Rental-FontEnd/assets/savedImages/Customers/")[1];
@@ -1045,6 +1048,7 @@ function loadRegisteredCustomers() {
         method: "GET",
         success: function (res) {
             for (const customer of res.data) {
+                console.log(customer.status);
                 let row = `<tr><td>${customer.customerId}</td><td>${customer.name}</td><td>${customer.address}</td><td>${customer.contactNo}</td><td>${customer.email}</td><td>${customer.nicNo}</td><td>${customer.licenceNo}</td><td>${customer.status}</td></tr>`;
                 $('#tblRegisteredCustomers').append(row);
             }
@@ -1241,6 +1245,7 @@ function clearDriverFields() {
 
     $('#btnUpdateDriver').prop('disabled', true);
     $('#btnDeleteDriver').prop('disabled', true);
+    $('#btnSaveDriver').prop('disabled', false);
 
     loadAvailableDrivers();
     loadNonAvailableDrivers();
@@ -1266,6 +1271,7 @@ function saveDriver() {
     var nic = $('#txtDriverNICNo').val();
     var username = $('#txtDriverUserName').val();
     var password = $('#txtDriverPassword').val();
+    var availability = true;
 
     var driver = {
         licenceNo: licenceNo,
@@ -1274,7 +1280,8 @@ function saveDriver() {
         contactNo: contact,
         nicNo: nic,
         username: username,
-        password: password
+        password: password,
+        availability: availability
     }
 
     $.ajax({
@@ -1391,6 +1398,7 @@ function bindRegisterDriversClickEvents() {
         findDriver(licenceNo);
         $('#btnUpdateDriver').prop('disabled', false);
         $('#btnDeleteDriver').prop('disabled', false);
+        $('#btnSaveDriver').prop('disabled', true);
     })
 }
 
@@ -1731,7 +1739,7 @@ function acceptRental() {
                 timer: 2000
             });
         },
-        error:function (ob) {
+        error: function (ob) {
             swal({
                 title: "Error!",
                 text: "Car Rental Not Accepted",
@@ -1760,7 +1768,7 @@ function clearRentalRequestFields() {
 }
 
 $('#btnRentalReject').click(function () {
-    if ($('#txtRentId').val()!=""){
+    if ($('#txtRentId').val() != "") {
         let rentId = $('#txtRentId').val();
         rejectRentals(rentId);
     } else {
@@ -1770,9 +1778,9 @@ $('#btnRentalReject').click(function () {
 
 function rejectRentals(rentId) {
     $.ajax({
-        url:baseUrl + "api/v1/CarRent?rentId=" + rentId,
-        method:"DELETE",
-        success:function (res) {
+        url: baseUrl + "api/v1/CarRent?rentId=" + rentId,
+        method: "DELETE",
+        success: function (res) {
             loadAllRentals();
             loadPendingRentals();
             loadTodayBookings();
@@ -1786,7 +1794,7 @@ function rejectRentals(rentId) {
                 timer: 2000
             });
         },
-        error:function (ob) {
+        error: function (ob) {
             swal({
                 title: "Error!",
                 text: "Car Rental Not Rejected",
@@ -1802,9 +1810,9 @@ $('#btnClearRental').click(function () {
     clearRentalRequestFields();
 })
 
-$('#searchRentalRequest').on('keyup',function (event) {
+$('#searchRentalRequest').on('keyup', function (event) {
     checkSearchRentId();
-    if (event.key==="Enter"){
+    if (event.key === "Enter") {
         searchRentalRequest();
     }
 })
@@ -1825,15 +1833,15 @@ function searchRentalRequest() {
 
     $('#tblCarRentalRequests').empty();
     $.ajax({
-        url:baseUrl + "api/v1/CarRent/" + rentId,
-        method:"GET",
-        success:function (res) {
+        url: baseUrl + "api/v1/CarRent/" + rentId,
+        method: "GET",
+        success: function (res) {
             let carRent = res.data;
             let row = `<tr><td>${carRent.rentId}</td><td>${carRent.date}</td><td>${carRent.pickUpDate}</td><td>${carRent.returnDate}</td><td>${carRent.car.registrationNO}</td><td>${carRent.customer.customerId}</td><td>${carRent.driver.licenceNo}</td><td>${carRent.status}</td></tr>`;
             $('#tblCarRentalRequests').append(row);
             bindCarRentalRequestTableClickEvents();
         },
-        error:function (ob) {
+        error: function (ob) {
             loadPendingRentals();
             swal({
                 title: "Error!",
@@ -1847,7 +1855,7 @@ function searchRentalRequest() {
 }
 
 $('#btnSearchRentalRequest').click(function () {
-    if ($('#searchRentalRequest').val()!=""){
+    if ($('#searchRentalRequest').val() != "") {
         searchRentalRequest();
     }
 })

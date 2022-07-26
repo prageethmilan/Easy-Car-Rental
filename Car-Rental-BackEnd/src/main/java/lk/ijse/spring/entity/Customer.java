@@ -32,7 +32,7 @@ public class Customer {
     private String licenceImg;
     private String username;
     private String password;
-    private final String status = "Pending";
+    private String status;
 
     @OneToMany(mappedBy = "customer",cascade = CascadeType.ALL)
     private List<CarRent> rentals = new ArrayList<>();

@@ -38,7 +38,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void updateCustomer(CustomerDTO dto) {
         if (repo.existsById(dto.getCustomerId())) {
-            repo.save(mapper.map(dto, Customer.class));
+            repo.updateCustomer(dto.getCustomerId(),dto.getName(),dto.getAddress(),dto.getEmail(),dto.getContactNo(),dto.getNicNo(),dto.getLicenceNo(),dto.getUsername());
         } else {
             throw new RuntimeException("No Such Customer To Update");
         }
@@ -47,8 +47,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDTO searchCustomer(String customerId) {
         if (repo.existsById(customerId)) {
-            return mapper.map(repo.searchCustomer(customerId), new TypeToken<List<CustomerDTO>>() {
-            }.getType());
+            return mapper.map(repo.findById(customerId).get(),CustomerDTO.class);
         } else {
             throw new RuntimeException("No Such Customer");
         }

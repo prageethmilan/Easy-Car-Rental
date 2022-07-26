@@ -1,9 +1,31 @@
 generateRentId();
 getLastLoginUser();
+generatePaymentId();
 
 let baseUrl = "http://localhost:8080/Car_Rental_BackEnd_war/";
 let today = new Date().toISOString().slice(0, 10);
 $('#txtCarTodayDate').val(today);
+
+let regRegNo = /^[A-z ]{1,3}(-)[0-9]{4}$/;
+let regBrand = /^[A-z, |0-9:./]*\b$/;
+let regNoOfPassengers = /^[0-9]{1,2}$/;
+let regDailyRate = /^[0-9.]{1,}$/;
+let regMonthlyRate = /^[0-9.]{1,}$/;
+let regFreeKmForPrice = /^[0-9.]{1,}$/;
+let regFreeKmForDuration = /^[0-9.]{1,}$/;
+let regLossDamageWaiver = /^[0-9.]{1,}$/;
+let regPriceForExtraKm = /^[0-9.]{1,}$/;
+let regCompleteKm = /^[0-9.]{1,}$/;
+let regCustomerId = /^(C00-)[0-9]{4}$/;
+let regLicenceNo = /^(B)[0-9]{7}$/;
+let regLoginUsername = /^[A-z0-9]{6,10}$/;
+let regLoginPassword = /^[A-z0-9@#$%&!*]{8,}$/;
+let regName = /^[A-z .]{3,}$/;
+let regAddress = /^[A-z ,.0-9]{3,}$/;
+let regContactNo = /^(0)[1-9][0-9][0-9]{7}$/;
+let regNicNo = /^[0-9]{9}(V)|[0-9]{12}$/;
+let regRentId = /^(RT0-)[0-9]{4}$/;
+let regEmail = /^[a-z0-9]{3,}(@)[a-z]{3,}(.)[a-z]{2,3}$/;
 
 function getLastLoginUser() {
     $.ajax({
@@ -54,6 +76,200 @@ function loadMyCarRentsToTable(customerId) {
         }
     })
 }
+
+$('#txtCusName').on('keyup', function (event) {
+    checkCusName();
+    if (event.key === "Enter") {
+        if (regName.test($('#txtCusName').val())) {
+            $('#txtCusAddress').focus();
+        } else {
+            $('#txtCusName').focus();
+        }
+    }
+})
+
+function checkCusName() {
+    let name = $('#txtCusName').val();
+    if (regName.test(name)) {
+        $("#txtCusName").css('border', '2px solid green');
+        return true;
+    } else {
+        $("#txtCusName").css('border', '2px solid red');
+        return false;
+    }
+}
+
+$('#txtCusAddress').on('keyup', function (event) {
+    checkCusAddress();
+    if (event.key === "Enter") {
+        if (regAddress.test($('#txtCusAddress').val())) {
+            $('#txtCusEmail').focus();
+        } else {
+            $('#txtCusAddress').focus();
+        }
+    }
+})
+
+function checkCusAddress() {
+    let address = $('#txtCusAddress').val();
+    if (regAddress.test(address)) {
+        $("#txtCusAddress").css('border', '2px solid green');
+        return true;
+    } else {
+        $("#txtCusAddress").css('border', '2px solid red');
+        return false;
+    }
+}
+
+$('#txtCusEmail').on('keyup', function (event) {
+    checkCusEmail();
+    if (event.key === "Enter") {
+        if (regEmail.test($('#txtCusEmail').val())) {
+            $('#txtCusContactNo').focus();
+        } else {
+            $('#txtCusEmail').focus();
+        }
+    }
+})
+
+function checkCusEmail() {
+    let email = $('#txtCusEmail').val();
+    if (regEmail.test(email)) {
+        $("#txtCusEmail").css('border', '2px solid green');
+        return true;
+    } else {
+        $("#txtCusEmail").css('border', '2px solid red');
+        return false;
+    }
+}
+
+$('#txtCusContactNo').on('keyup', function (event) {
+    checkCusContact();
+    if (event.key === "Enter") {
+        if (regContactNo.test($('#txtCusContactNo').val())) {
+            $('#txtCusNIC').focus();
+        } else {
+            $('#txtCusContactNo').focus();
+        }
+    }
+})
+
+function checkCusContact() {
+    let contact = $('#txtCusContactNo').val();
+    if (regContactNo.test(contact)) {
+        $("#txtCusContactNo").css('border', '2px solid green');
+        return true;
+    } else {
+        $("#txtCusContactNo").css('border', '2px solid red');
+        return false;
+    }
+}
+
+$('#txtCusNIC').on('keyup', function (event) {
+    checkCusNIC();
+    if (event.key === "Enter") {
+        if (regNicNo.test($('#txtCusNIC').val())) {
+            $('#txtCusLicenceNo').focus();
+        } else {
+            $('#txtCusNIC').focus();
+        }
+    }
+})
+
+function checkCusNIC() {
+    let nic = $('#txtCusNIC').val();
+    if (regNicNo.test(nic)) {
+        $("#txtCusNIC").css('border', '2px solid green');
+        return true;
+    } else {
+        $("#txtCusNIC").css('border', '2px solid red');
+        return false;
+    }
+}
+
+$('#txtCusLicenceNo').on('keyup', function (event) {
+    checkCusLicence();
+    if (event.key === "Enter") {
+        if (regLicenceNo.test($('#txtCusLicenceNo').val())) {
+            let res = confirm("Do you want to update your details?");
+            if (res) {
+                updateCustomer();
+            }
+        } else {
+            $('#txtCusLicenceNo').focus();
+        }
+    }
+})
+
+function checkCusLicence() {
+    let licence = $('#txtCusLicenceNo').val();
+    if (regLicenceNo.test(licence)) {
+        $("#txtCusLicenceNo").css('border', '2px solid green');
+        return true;
+    } else {
+        $("#txtCusLicenceNo").css('border', '2px solid red');
+        return false;
+    }
+}
+
+function updateCustomer() {
+    let customerId = $('#txtCusId').val();
+    let name = $('#txtCusName').val();
+    let address = $('#txtCusAddress').val();
+    let email = $('#txtCusEmail').val();
+    let contact = $('#txtCusContactNo').val();
+    let nic = $('#txtCusNIC').val();
+    let licenceNo = $('#txtCusLicenceNo').val();
+
+    var customer = {
+        customerId: customerId,
+        name: name,
+        address: address,
+        contactNo: contact,
+        email: email,
+        nicNo: nic,
+        licenceNo: licenceNo
+    }
+
+    $.ajax({
+        url: baseUrl + "api/v1/customer",
+        method: "PUT",
+        contentType: "application/json",
+        data: JSON.stringify(customer),
+        success: function (res) {
+            getLastLoginUser();
+            swal({
+                title: "Confirmation!",
+                text: "Customer Updated Successfully",
+                icon: "success",
+                button: "Close",
+                timer: 2000
+            });
+        },
+        error: function (ob) {
+            swal({
+                title: "Error!",
+                text: "Customer Not Updated Successfully",
+                icon: "error",
+                button: "Close",
+                timer: 2000
+            });
+        }
+    })
+}
+
+$('#btnUpdateCustomer').click(function () {
+    if ($('#txtCusId').val()!=""){
+        let res = confirm("Do you want to update your details?");
+        if (res){
+            updateCustomer();
+        }
+    }
+})
+
+$('#btnRefreshCustomer').click(function () {
+    getLastLoginUser();
+})
 
 $('#cmbType').change(function () {
     let type = $('#cmbType').find('option:selected').text();
@@ -187,7 +403,7 @@ function searchRandomDriverForRent() {
                 $('#txtDriverNIC').val(driver.nicNo);
             }
         },
-        error:function (ob) {
+        error: function (ob) {
             swal({
                 title: "Error!",
                 text: "Drivers are not available in this time.Please try again shortly",
@@ -199,10 +415,21 @@ function searchRandomDriverForRent() {
     })
 }
 
-function clearRentalDriverFields(){
+function clearRentalDriverFields() {
     $('#txtDriverLicenceNo').val("");
     $('#txtDriverName').val("");
     $('#txtDriverAddress').val("");
     $('#txtDriverContactNo').val("");
     $('#txtDriverNIC').val("");
 }
+
+function generatePaymentId() {
+    $.ajax({
+        url:"http://localhost:8080/Car_Rental_BackEnd_war/api/v1/payment/generatePaymentId",
+        method:"GET",
+        success:function (res) {
+            $('#txtPaymentId').val(res.data);
+        }
+    })
+}
+

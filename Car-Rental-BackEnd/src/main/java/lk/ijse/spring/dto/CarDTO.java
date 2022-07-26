@@ -32,5 +32,5 @@ public class CarDTO {
     private double lossDamageWaiver;
     private double priceForExtraKm;
     private double completeKm;
-    private final String status="Available";
+    private String status;
 }

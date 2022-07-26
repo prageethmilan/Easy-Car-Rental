@@ -23,7 +23,7 @@ public class CarRentDTO {
     private LocalDate pickUpDate;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate returnDate;
-    private final String status = "Pending";
+    private String status;
     private CustomerDTO customer;
     private CarDTO car;
     private DriverDTO driver;

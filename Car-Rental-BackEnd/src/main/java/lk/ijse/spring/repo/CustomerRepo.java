@@ -40,10 +40,14 @@ public interface CustomerRepo extends JpaRepository<Customer, String> {
     @Query(value = "UPDATE Customer SET nicFrontImg=:nicFrontImg,nicBackImg=:nicBackImg,licenceImg=:licenceImg WHERE customerId=:customerId", nativeQuery = true)
     void updateCustomerFilePaths(@Param("nicFrontImg") String nicFrontImg, @Param("nicBackImg") String nicBackImg, @Param("licenceImg") String licenceImg, @Param("customerId") String customerId);
 
-    @Query(value = "SELECT COUNT(customerId) FROM Customer WHERE status='Accepted'",nativeQuery = true)
+    @Query(value = "SELECT COUNT(customerId) FROM Customer WHERE status='Accepted'", nativeQuery = true)
     int countByCustomerId();
 
-    @Query(value = "SELECT * FROM Customer WHERE customerId=:customerId AND status='Accepted'",nativeQuery = true)
+    @Query(value = "SELECT * FROM Customer WHERE customerId=:customerId AND status='Accepted'", nativeQuery = true)
     List<Customer> searchCustomer(@Param("customerId") String customerId);
 
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE Customer SET name=:name,address=:address,email=:email,contactNo=:contactNo,nicNo=:nicNo,licenceNo=:licenceNo,username=:username WHERE customerId=:customerId", nativeQuery = true)
+    void updateCustomer(@Param("customerId") String customerId, @Param("name") String name, @Param("address") String address, @Param("email") String email, @Param("contactNo") int contactNo, @Param("nicNo") String nicNo, @Param("licenceNo") String licenceNo, @Param("username") String username);
 }

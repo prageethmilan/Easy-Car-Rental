@@ -376,6 +376,7 @@ function addCustomer() {
     let licenceNo = $('#inputDrivingLicence').val();
     let username = $('#inputUserName').val();
     let password = $('#inputPassword').val();
+    let status = "Pending";
 
     var customer = {
         customerId: id,
@@ -386,7 +387,8 @@ function addCustomer() {
         nicNo: nicNo,
         licenceNo: licenceNo,
         username: username,
-        password: password
+        password: password,
+        status: status
     }
 
     $.ajax({
@@ -640,10 +642,10 @@ function loginUser() {
 
     if (userType === "Admin") {
         searchAdmin(userType, username, password);
-    } else if (userType === "Customer"){
+    } else if (userType === "Customer") {
         searchCustomer(userType, username, password);
-    } else if (userType === "Driver"){
-        searchDriver(userType,username,password);
+    } else if (userType === "Driver") {
+        searchDriver(userType, username, password);
     }
 }
 
@@ -669,7 +671,7 @@ function loginSave(userType, username, password) {
 }
 
 $(function () {
-   getNewLoginId();
+    getNewLoginId();
 });
 
 function getNewLoginId() {
@@ -699,12 +701,12 @@ function searchAdmin(userType, username, password) {
 
 function searchCustomer(userType, username, password) {
     $.ajax({
-        url:baseUrl + "api/v1/customer/" + username + "/" +password,
-        method:"GET",
+        url: baseUrl + "api/v1/customer/" + username + "/" + password,
+        method: "GET",
         success: function (res) {
             console.log(res.data);
-            if (res.data === true){
-                loginSave(userType,username,password);
+            if (res.data === true) {
+                loginSave(userType, username, password);
                 location.replace("CustomerDashboard.html");
             } else {
                 alert(res.massage);
@@ -715,12 +717,12 @@ function searchCustomer(userType, username, password) {
 
 function searchDriver(userType, username, password) {
     $.ajax({
-        url:baseUrl + "api/v1/driver/" + username + "/" + password,
-        method:"GET",
+        url: baseUrl + "api/v1/driver/" + username + "/" + password,
+        method: "GET",
         success: function (res) {
             console.log(res.data);
-            if (res.data === true){
-                loginSave(userType,username,password);
+            if (res.data === true) {
+                loginSave(userType, username, password);
                 location.replace("DriverDashboard.html");
             } else {
                 alert(res.massage);

@@ -38,7 +38,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public void updateCar(CarDTO dto) {
         if (repo.existsById(dto.getRegistrationNO())) {
-            repo.save(mapper.map(dto, Car.class));
+            repo.updateCar(dto.getRegistrationNO(),dto.getBrand(),dto.getType(),dto.getNoOfPassengers(),dto.getTransmissionType(),dto.getFuelType(),dto.getColor(),dto.getDailyRate(),dto.getMonthlyRate(),dto.getFreeKmForPrice(),dto.getFreeKmForDuration(),dto.getLossDamageWaiver(),dto.getPriceForExtraKm(),dto.getCompleteKm());
         } else {
             throw new RuntimeException("No Such Car To Update");
         }
