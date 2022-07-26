@@ -18,6 +18,7 @@ $(function () {
     loadAllDrivers();
     loadAllRentals();
     loadAllPayments();
+    loadPendingRentals();
 });
 
 let today = new Date().toISOString().slice(0, 10);
@@ -40,6 +41,7 @@ let regName = /^[A-z .]{3,}$/;
 let regAddress = /^[A-z ,.0-9]{3,}$/;
 let regContactNo = /^(0)[1-9][0-9][0-9]{7}$/;
 let regNicNo = /^[0-9]{9}(V)|[0-9]{12}$/;
+let regRentId = /^(RT0-)[0-9]{4}$/;
 
 function getRegisterCustomersCount() {
     $.ajax({
@@ -1416,7 +1418,7 @@ $('#btnClearDriver').click(function () {
 $('#btnDeleteDriver').click(function () {
     if ($('#txtLicenceNo').val() != "") {
         let res = "Do you want to delete this driver?";
-        if (res){
+        if (res) {
             deleteDriver();
             clearDriverFields();
         }
@@ -1508,11 +1510,11 @@ function updateDriver() {
     }
 
     $.ajax({
-        url:baseUrl + "api/v1/driver",
-        method:"PUT",
-        contentType:"application/json",
-        data:JSON.stringify(driver),
-        success:function (res) {
+        url: baseUrl + "api/v1/driver",
+        method: "PUT",
+        contentType: "application/json",
+        data: JSON.stringify(driver),
+        success: function (res) {
             loadAllDrivers();
             loadAvailableDrivers();
             loadNonAvailableDrivers();
@@ -1524,7 +1526,7 @@ function updateDriver() {
                 timer: 2000
             });
         },
-        error:function (ob) {
+        error: function (ob) {
             swal({
                 title: "Error!",
                 text: "Driver Not Updated Successfully",
@@ -1536,9 +1538,9 @@ function updateDriver() {
     })
 }
 
-$('#searchDriver').on('keyup',function (event) {
+$('#searchDriver').on('keyup', function (event) {
     checkSearchDriver();
-    if (event.key==="Enter"){
+    if (event.key === "Enter") {
         searchDriverDetails();
     }
 })
@@ -1557,15 +1559,15 @@ function checkSearchDriver() {
 function searchDriverDetails() {
     let licenceNo = $('#searchDriver').val();
     $.ajax({
-        url:baseUrl + "api/v1/driver/" + licenceNo,
-        method:"GET",
-        success:function (res) {
+        url: baseUrl + "api/v1/driver/" + licenceNo,
+        method: "GET",
+        success: function (res) {
             let driver = res.data;
             $('#tblRegisteredDrivers').empty();
             let row = `<tr><td>${driver.licenceNo}</td><td>${driver.name}</td><td>${driver.address}</td><td>${driver.contactNo}</td><td>${driver.nicNo}</td><td>${driver.availability}</td></tr>`;
             $('#tblRegisteredDrivers').append(row);
         },
-        error:function (ob) {
+        error: function (ob) {
             loadAllDrivers();
             swal({
                 title: "Error!",
@@ -1579,7 +1581,7 @@ function searchDriverDetails() {
 }
 
 $('#btnSearchDriver').click(function () {
-    if ($('#searchDriver').val()!=""){
+    if ($('#searchDriver').val() != "") {
         searchDriverDetails();
     }
 })
@@ -1587,9 +1589,9 @@ $('#btnSearchDriver').click(function () {
 function loadAllRentals() {
     $('#tblCarRentals').empty();
     $.ajax({
-        url:baseUrl + "api/v1/CarRent",
-        method:"GET",
-        success:function (res) {
+        url: baseUrl + "api/v1/CarRent",
+        method: "GET",
+        success: function (res) {
             for (const carRent of res.data) {
                 let row = `<tr><td>${carRent.rentId}</td><td>${carRent.date}</td><td>${carRent.pickUpDate}</td><td>${carRent.returnDate}</td><td>${carRent.car.registrationNO}</td><td>${carRent.customer.customerId}</td><td>${carRent.driver.licenceNo}</td><td>${carRent.status}</td></tr>`;
                 $('#tblCarRentals').append(row);
@@ -1601,9 +1603,9 @@ function loadAllRentals() {
 function loadAllPayments() {
     $('#tblPayments').empty();
     $.ajax({
-        url:baseUrl + "api/v1/payment",
-        method:"GET",
-        success:function (res) {
+        url: baseUrl + "api/v1/payment",
+        method: "GET",
+        success: function (res) {
             for (const payment of res.data) {
                 let row = `<tr><td>${payment.paymentId}</td><td>${payment.date}</td><td>${payment.amount}</td><td>${payment.rental.rentId}</td><td>${payment.customer.customerId}</td></tr>`;
                 $('#tblPayments').append(row);
@@ -1613,8 +1615,8 @@ function loadAllPayments() {
 }
 
 $('#btnSearchPayment').click(function () {
-    if ($('#pickFromDate').val()!=""){
-        if ($('#pickToDate').val()!=""){
+    if ($('#pickFromDate').val() != "") {
+        if ($('#pickToDate').val() != "") {
             searchPaymentByDate();
         } else {
             alert("Please select to date");
@@ -1630,15 +1632,15 @@ function searchPaymentByDate() {
 
     $('#tblPayments').empty();
     $.ajax({
-        url:baseUrl + "api/v1/payment/" + fromDate + "/" + toDate,
-        method:"GET",
-        success:function (res) {
+        url: baseUrl + "api/v1/payment/" + fromDate + "/" + toDate,
+        method: "GET",
+        success: function (res) {
             for (const payment of res.data) {
                 let row = `<tr><td>${payment.paymentId}</td><td>${payment.date}</td><td>${payment.amount}</td><td>${payment.rental.rentId}</td><td>${payment.customer.customerId}</td></tr>`;
                 $('#tblPayments').append(row);
             }
         },
-        error:function (ob) {
+        error: function (ob) {
             loadAllPayments();
             clearPaymentDateFields();
             swal({
@@ -1661,3 +1663,191 @@ function clearPaymentDateFields() {
     $('#pickToDate').val("");
     loadAllPayments();
 }
+
+function loadPendingRentals() {
+    let status = "Pending";
+
+    $('#tblCarRentalRequests').empty();
+    $.ajax({
+        url: baseUrl + "api/v1/CarRent/get/" + status,
+        method: "GET",
+        success: function (res) {
+            for (const carRent of res.data) {
+                let row = `<tr><td>${carRent.rentId}</td><td>${carRent.date}</td><td>${carRent.pickUpDate}</td><td>${carRent.returnDate}</td><td>${carRent.car.registrationNO}</td><td>${carRent.customer.customerId}</td><td>${carRent.driver.licenceNo}</td><td>${carRent.status}</td></tr>`;
+                $('#tblCarRentalRequests').append(row);
+            }
+            bindCarRentalRequestTableClickEvents();
+        }
+    })
+}
+
+function bindCarRentalRequestTableClickEvents() {
+    $('#tblCarRentalRequests>tr').click(function () {
+        let rentId = $(this).children().eq(0).text();
+        let date = $(this).children().eq(1).text();
+        let pickupDate = $(this).children().eq(2).text();
+        let returnDate = $(this).children().eq(3).text();
+        let regNo = $(this).children().eq(4).text();
+        let custId = $(this).children().eq(5).text();
+        let licenceNo = $(this).children().eq(6).text();
+        let status = $(this).children().eq(7).text();
+
+        $('#txtRentId').val(rentId);
+        $('#txtDate').val(date);
+        $('#txtPickupDate').val(pickupDate);
+        $('#txtReturnDate').val(returnDate);
+        $('#txtCarRegistrationNo').val(regNo);
+        $('#txtCusId').val(custId);
+        $('#txtDLicenceNo').val(licenceNo);
+        $('#txtRentalStatus').val(status);
+    })
+}
+
+$('#btnRentalAccept').click(function () {
+    if ($('#txtRentId').val() != "") {
+        acceptRental();
+    } else {
+        alert("Please select car rental");
+    }
+})
+
+function acceptRental() {
+    let rentId = $('#txtRentId').val();
+    let status = "Accepted";
+
+    $.ajax({
+        url: baseUrl + "api/v1/CarRent/" + rentId + "/" + status,
+        method: "PUT",
+        success: function (res) {
+            loadAllRentals();
+            loadPendingRentals();
+            loadTodayBookings();
+            clearRentalRequestFields();
+            swal({
+                title: "Confirmation!",
+                text: "Car Rental Accepted Successfully",
+                icon: "success",
+                button: "Close",
+                timer: 2000
+            });
+        },
+        error:function (ob) {
+            swal({
+                title: "Error!",
+                text: "Car Rental Not Accepted",
+                icon: "error",
+                button: "Close",
+                timer: 2000
+            });
+        }
+    })
+}
+
+function clearRentalRequestFields() {
+    $('#txtRentId').val("");
+    $('#txtDate').val("");
+    $('#txtPickupDate').val("");
+    $('#txtReturnDate').val("");
+    $('#txtCarRegistrationNo').val("");
+    $('#txtCusId').val("");
+    $('#txtDLicenceNo').val("");
+    $('#txtRentalStatus').val("");
+    $('#searchRentalRequest').val("");
+
+    $('#searchRentalRequest').css('border', '1px solid #ced4da');
+
+    loadPendingRentals();
+}
+
+$('#btnRentalReject').click(function () {
+    if ($('#txtRentId').val()!=""){
+        let rentId = $('#txtRentId').val();
+        rejectRentals(rentId);
+    } else {
+        alert("Please select car rental");
+    }
+})
+
+function rejectRentals(rentId) {
+    $.ajax({
+        url:baseUrl + "api/v1/CarRent?rentId=" + rentId,
+        method:"DELETE",
+        success:function (res) {
+            loadAllRentals();
+            loadPendingRentals();
+            loadTodayBookings();
+            getTodayBookingsCount();
+            clearRentalRequestFields();
+            swal({
+                title: "Confirmation!",
+                text: "Car Rental Rejected Successfully",
+                icon: "success",
+                button: "Close",
+                timer: 2000
+            });
+        },
+        error:function (ob) {
+            swal({
+                title: "Error!",
+                text: "Car Rental Not Rejected",
+                icon: "error",
+                button: "Close",
+                timer: 2000
+            });
+        }
+    })
+}
+
+$('#btnClearRental').click(function () {
+    clearRentalRequestFields();
+})
+
+$('#searchRentalRequest').on('keyup',function (event) {
+    checkSearchRentId();
+    if (event.key==="Enter"){
+        searchRentalRequest();
+    }
+})
+
+function checkSearchRentId() {
+    var search = $('#searchRentalRequest').val();
+    if (regRentId.test(search)) {
+        $("#searchRentalRequest").css('border', '2px solid green');
+        return true;
+    } else {
+        $("#searchRentalRequest").css('border', '2px solid red');
+        return false;
+    }
+}
+
+function searchRentalRequest() {
+    let rentId = $('#searchRentalRequest').val();
+
+    $('#tblCarRentalRequests').empty();
+    $.ajax({
+        url:baseUrl + "api/v1/CarRent/" + rentId,
+        method:"GET",
+        success:function (res) {
+            let carRent = res.data;
+            let row = `<tr><td>${carRent.rentId}</td><td>${carRent.date}</td><td>${carRent.pickUpDate}</td><td>${carRent.returnDate}</td><td>${carRent.car.registrationNO}</td><td>${carRent.customer.customerId}</td><td>${carRent.driver.licenceNo}</td><td>${carRent.status}</td></tr>`;
+            $('#tblCarRentalRequests').append(row);
+            bindCarRentalRequestTableClickEvents();
+        },
+        error:function (ob) {
+            loadPendingRentals();
+            swal({
+                title: "Error!",
+                text: "Car Rental Not Found",
+                icon: "error",
+                button: "Close",
+                timer: 2000
+            });
+        }
+    })
+}
+
+$('#btnSearchRentalRequest').click(function () {
+    if ($('#searchRentalRequest').val()!=""){
+        searchRentalRequest();
+    }
+})
