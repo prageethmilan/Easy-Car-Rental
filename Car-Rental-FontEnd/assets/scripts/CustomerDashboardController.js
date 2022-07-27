@@ -52,6 +52,22 @@ function getAllUserData(username, password) {
     })
 }
 
+function loadMyAllPayments(customerId) {
+    $('#paymentsTable').empty();
+    $.ajax({
+        url:"http://localhost:8080/Car_Rental_BackEnd_war/api/v1/payment/getAll/"+customerId,
+        method:"GET",
+        success:function (res) {
+            console.log("Payments");
+            for (let payment of res.data) {
+                console.log(payment);
+                let row = `<tr><td>${payment.paymentId}</td><td>${payment.date}</td><td>${payment.amount}</td><td>${payment.rental.rentId}</td><td>${payment.customer.customerId}</td></tr>`;
+                $('#paymentsTable').append(row);
+            }
+        }
+    })
+}
+
 function bindBookingResponsesTableCliskEvents() {
     $('#bookingResponsesTable>tr').click(function () {
         let rentId = $(this).children().eq(0).text();
@@ -100,6 +116,7 @@ function loadMyCarRentsToTable(customerId) {
                 $('#bookingResponsesTable').append(row);
             }
             bindBookingResponsesTableCliskEvents();
+            loadMyAllPayments(customerId);
         }
     })
 }
@@ -684,8 +701,8 @@ function cancleRental() {
         url: baseUrl + "api/v1/CarRent/" + rentId + "/" + status,
         method: "PUT",
         success: function (res) {
-            deletePayment(rentId,licenceNo,registrationNo);
-            loadMyCarRentsToTable(customerId);
+            deletePayment(rentId,licenceNo,registrationNo,customerId);
+            // loadMyCarRentsToTable(customerId);
             swal({
                 title: "Confirmation",
                 text: "Booking Canceled...",
@@ -725,7 +742,7 @@ function clearCarRentResponseFields() {
     $('#txtRentCustId').val("");
 }
 
-function deletePayment(rentId,licenceNo,registrationNo) {
+function deletePayment(rentId,licenceNo,registrationNo,customerId) {
     $.ajax({
         url:baseUrl + "api/v1/payment/delete/" + rentId,
         method:"DELETE",
@@ -734,12 +751,15 @@ function deletePayment(rentId,licenceNo,registrationNo) {
             let status = "Available";
             updateCarStatusByRegNo(status,registrationNo);
             updateDriverStatusByLicenceNo(licenceNo);
+            loadMyCarRentsToTable(customerId);
             generateRentId();
             generatePaymentId();
             clearCarRentResponseFields();
         }
     })
 }
+
+
 
 function updateCarStatusByRegNo(status,registrationNo) {
     $.ajax({
