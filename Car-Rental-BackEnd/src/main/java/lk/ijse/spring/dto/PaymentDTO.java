@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * @author : M-Prageeth
@@ -19,7 +20,7 @@ import java.time.LocalDate;
 public class PaymentDTO {
     private String paymentId;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate date;
+    private String date;
     private double amount;
     private CarRentDTO rental;
     private CustomerDTO customer;

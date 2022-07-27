@@ -26,6 +26,7 @@ let regContactNo = /^(0)[1-9][0-9][0-9]{7}$/;
 let regNicNo = /^[0-9]{9}(V)|[0-9]{12}$/;
 let regRentId = /^(RT0-)[0-9]{4}$/;
 let regEmail = /^[a-z0-9]{3,}(@)[a-z]{3,}(.)[a-z]{2,3}$/;
+let regAmount = /^[0-9.]{1,}$/;
 
 function getLastLoginUser() {
     $.ajax({
@@ -259,9 +260,9 @@ function updateCustomer() {
 }
 
 $('#btnUpdateCustomer').click(function () {
-    if ($('#txtCusId').val()!=""){
+    if ($('#txtCusId').val() != "") {
         let res = confirm("Do you want to update your details?");
-        if (res){
+        if (res) {
             updateCustomer();
         }
     }
@@ -425,11 +426,99 @@ function clearRentalDriverFields() {
 
 function generatePaymentId() {
     $.ajax({
-        url:"http://localhost:8080/Car_Rental_BackEnd_war/api/v1/payment/generatePaymentId",
-        method:"GET",
-        success:function (res) {
+        url: "http://localhost:8080/Car_Rental_BackEnd_war/api/v1/payment/generatePaymentId",
+        method: "GET",
+        success: function (res) {
             $('#txtPaymentId').val(res.data);
         }
     })
 }
 
+$('#txtPaymentAmount').on('keyup', function (event) {
+    checkAdvancedAmount();
+})
+
+function checkAdvancedAmount() {
+    let amount = $('#txtPaymentAmount').val();
+    if (regAmount.test(amount)) {
+        $('#txtPaymentAmount').css('border', '2px solid green');
+        return true;
+    } else {
+        $('#txtPaymentAmount').css('border', '2px solid red');
+        return false;
+    }
+}
+
+$('#sendRequest').click(function () {
+    let regNo = $('#cmbRegistrationNo').find('option:selected').text();
+    if (regNo != "" && regNo != "-Select Registration No-") {
+        let custId = $('#txtCustId').val();
+        searchCustomerById(custId);
+    }
+})
+
+function searchCustomerById(customerId) {
+    $.ajax({
+        url: baseUrl + "api/v1/customer/" + customerId,
+        method: "GET",
+        success: function (res) {
+            let customer = res.data;
+            searchCarByRegNo(customer);
+        }
+    });
+}
+
+function searchCarByRegNo(customer) {
+    let registrationNo = $('#cmbRegistrationNo').find('option:selected').text();
+    $.ajax({
+        url: baseUrl + "api/v1/car/" + registrationNo,
+        method: "GET",
+        success: function (res) {
+            let car = res.data;
+            searchDriverByLicenceNo(customer, car);
+        }
+    })
+}
+
+function searchDriverByLicenceNo(customer, car) {
+    let licenceNo = $('#txtDriverLicenceNo').val();
+    $.ajax({
+        url: baseUrl + "api/v1/driver/" + licenceNo,
+        method: "GET",
+        success: function (res) {
+            let driver = res.data;
+            addCarRent(customer, car, driver);
+        }
+    })
+}
+
+function addCarRent(customer, car, driver) {
+
+    let rentId = $('#txtCarRentId').val();
+    let today = $('#txtCarTodayDate').val();
+    let pickupDate = $('#txtCarPickupDate').val();
+    let returnDate = $('#txtCarReturnDate').val();
+    let status = "Pending";
+
+    var carRent = {
+        rentId: rentId,
+        date: today,
+        pickUpDate: pickupDate,
+        returnDate: returnDate,
+        status: status,
+        customer: customer,
+        car: car,
+        driver: driver
+    }
+
+
+    $.ajax({
+        url:baseUrl + "api/v1/CarRent",
+        method:"POST",
+        contentType: "application/json",
+        data: JSON.stringify(carRent),
+        success:function (res) {
+            console.log("Saved");
+        }
+    })
+}

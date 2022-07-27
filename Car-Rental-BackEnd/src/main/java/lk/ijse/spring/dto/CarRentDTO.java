@@ -18,11 +18,12 @@ import java.time.LocalDate;
 @ToString
 public class CarRentDTO {
     private String rentId;
-    private LocalDate date;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate pickUpDate;
+    private String date;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate returnDate;
+    private String pickUpDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private String returnDate;
     private String status;
     private CustomerDTO customer;
     private CarDTO car;

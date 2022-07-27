@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * @author : M-Prageeth
@@ -20,7 +21,7 @@ import java.time.LocalDate;
 public class Maintenance {
     @Id
     private String maintenanceId;
-    private LocalDate date;
+    private String date;
     private String details;
     private final double cost = 0.0;
 

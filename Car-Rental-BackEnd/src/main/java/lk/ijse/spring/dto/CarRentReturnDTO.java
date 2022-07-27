@@ -12,6 +12,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * @author : M-Prageeth
@@ -24,7 +25,7 @@ import java.time.LocalDate;
 public class CarRentReturnDTO {
     private String returnId;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate date;
+    private String date;
     private double noOfKm;
     private CarRentDTO rental;
     private PaymentDTO payment;

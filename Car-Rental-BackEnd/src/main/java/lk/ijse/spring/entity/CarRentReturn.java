@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * @author : M-Prageeth
@@ -20,7 +21,7 @@ import java.time.LocalDate;
 public class CarRentReturn {
     @Id
     private String returnId;
-    private LocalDate date;
+    private String date;
     private double noOfKm;
 
     @OneToOne(cascade = CascadeType.ALL)

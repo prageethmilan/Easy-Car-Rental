@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * @author : M-Prageeth
@@ -23,9 +24,9 @@ import java.time.LocalDate;
 public class CarRent {
     @Id
     private String rentId;
-    private LocalDate date;
-    private LocalDate pickUpDate;
-    private LocalDate returnDate;
+    private String date;
+    private String pickUpDate;
+    private String returnDate;
     private String status;
 
     @ManyToOne

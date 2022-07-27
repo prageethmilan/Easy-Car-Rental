@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * @author : M-Prageeth
@@ -20,7 +21,7 @@ import java.time.LocalDate;
 public class Payment {
     @Id
     private String paymentId;
-    private LocalDate date;
+    private String date;
     private double amount;
 
     @OneToOne(cascade = CascadeType.ALL)
