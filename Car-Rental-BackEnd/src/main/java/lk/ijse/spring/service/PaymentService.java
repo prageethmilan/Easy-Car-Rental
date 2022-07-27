@@ -25,4 +25,6 @@ public interface PaymentService {
     List<PaymentDTO> getAllPaymentsByCustomerId(String customerId);
 
     String generatePaymentId();
+
+    void deletePaymentByRentId(String rentId);
 }

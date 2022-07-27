@@ -103,4 +103,13 @@ public class PaymentServiceImpl implements PaymentService {
         }
         return id;
     }
+
+    @Override
+    public void deletePaymentByRentId(String rentId) {
+        if (repo.existsByRentalRentId(rentId)){
+            repo.deleteAllByRentalRentId(rentId);
+        } else {
+            throw new RuntimeException("Payment Not Found");
+        }
+    }
 }

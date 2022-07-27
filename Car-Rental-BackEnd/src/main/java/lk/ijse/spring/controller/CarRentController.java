@@ -71,19 +71,19 @@ public class CarRentController {
         return new ResponseUtil(200, "Ok", service.generateRentId());
     }
 
-    @GetMapping(path = "/countTodayBookings/{today}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseUtil getTodayBookingCount(@PathVariable String today){
+    @GetMapping(path = "/countTodayBookings/{today}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil getTodayBookingCount(@PathVariable String today) {
         System.out.println(today);
-        return new ResponseUtil(200,"Ok",service.getTodayBookingCount(today));
+        return new ResponseUtil(200, "Ok", service.getTodayBookingCount(today));
     }
 
-    @GetMapping(path = "/getTodayBookings/{today}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseUtil getTodayBookings(@PathVariable String today){
-        return new ResponseUtil(200,"Ok",service.getTodayBookings(today));
+    @GetMapping(path = "/getTodayBookings/{today}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil getTodayBookings(@PathVariable String today) {
+        return new ResponseUtil(200, "Ok", service.getTodayBookings(today));
     }
 
-    @GetMapping(path = "/getMyCarRents/{customerId}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseUtil getMyCarRents(@PathVariable String customerId){
-        return new ResponseUtil(200,"Ok",service.getCarRentsByCustomerId(customerId));
+    @GetMapping(path = "/getMyCarRents/{customerId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil getMyCarRents(@PathVariable String customerId) {
+        return new ResponseUtil(200, "Ok", service.getCarRentsByCustomerId(customerId));
     }
 }

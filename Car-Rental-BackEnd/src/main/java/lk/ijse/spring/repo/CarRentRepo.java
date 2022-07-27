@@ -37,4 +37,5 @@ public interface CarRentRepo extends JpaRepository<CarRent, String> {
     @Query(value = "SELECT * FROM CarRent WHERE customerId=:customerId",nativeQuery = true)
     List<CarRent> getAllByCustomerId(@Param("customerId") String customerId);
 
+
 }

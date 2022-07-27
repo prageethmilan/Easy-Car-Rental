@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author : M-Prageeth
@@ -23,4 +24,11 @@ public interface PaymentRepo extends JpaRepository<Payment, String> {
 
     @Query(value = "SELECT paymentId FROM Payment ORDER BY paymentId DESC LIMIT 1", nativeQuery = true)
     String generatePaymentId();
+
+    boolean existsByRentalRentId(String rentId);
+
+    /*@Query(value = "DELETE FROM Payment WHERE rentID=:rentID",nativeQuery = true)
+    void deletePaymentByRentId(@Param("rentID") String rentID);*/
+
+    void deleteAllByRentalRentId(String rentID);
 }

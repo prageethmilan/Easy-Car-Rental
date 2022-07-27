@@ -155,6 +155,7 @@
                                     <th>Registration No</th>
                                     <th>Customer ID</th>
                                     <th>Licence No</th>
+                                    <th>Status</th>
                                 </tr>
                                 </thead>
                                 <tbody id="allCarRentalsTable">
@@ -441,10 +442,12 @@
                                     <input type="text" class="form-control" id="txtLicenceNo" name="licenceNo" disabled>
                                 </div>
                             </div>
+                            <input type="text" class="form-control" id="txtRentStatus" name="status" hidden>
+                            <input type="text" class="form-control" id="txtRentCustId" name="custId" hidden>
                         </div>
                         <div class="row m-3">
                             <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                                <button type="button" class="btn btn-danger mt-3 " id="btnDeleteRental"><i class="fas fa-trash"></i> Delete Rental</button>
+                                <button type="button" class="btn btn-danger mt-3 " id="btnDeleteRental"><i class="fas fa-trash"></i> Cancel Rental</button>
                                 <button type="button" class="btn btn-warning mt-3" id="btnClearRental">Clear</button>
                             </div>
                         </div>

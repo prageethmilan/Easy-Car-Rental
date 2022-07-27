@@ -65,4 +65,10 @@ public class PaymentController {
     public ResponseUtil generatePaymentId() {
         return new ResponseUtil(200, "Ok", service.generatePaymentId());
     }
+
+    @DeleteMapping(path = "/delete/{rentId}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil deletePaymentByRentId(@PathVariable String rentId){
+        service.deletePaymentByRentId(rentId);
+        return new ResponseUtil(200,"deleted",null);
+    }
 }

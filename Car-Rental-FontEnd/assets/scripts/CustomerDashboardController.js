@@ -52,6 +52,28 @@ function getAllUserData(username, password) {
     })
 }
 
+function bindBookingResponsesTableCliskEvents() {
+    $('#bookingResponsesTable>tr').click(function () {
+        let rentId = $(this).children().eq(0).text();
+        let date = $(this).children().eq(1).text();
+        let pickUpDate = $(this).children().eq(2).text();
+        let returnDate = $(this).children().eq(3).text();
+        let regNo = $(this).children().eq(4).text();
+        let custId = $(this).children().eq(5).text();
+        let licenceNo = $(this).children().eq(6).text();
+        let status = $(this).children().eq(7).text();
+
+        $('#txtRentId').val(rentId);
+        $('#txtDate').val(date);
+        $('#txtPickupDate').val(pickUpDate);
+        $('#txtReturnDate').val(returnDate);
+        $('#txtRegistrationNo').val(regNo);
+        $('#txtLicenceNo').val(licenceNo);
+        $('#txtRentStatus').val(status);
+        $('#txtRentCustId').val(custId);
+    })
+}
+
 function setCustomerDetails(customer) {
     $('#txtCustId').val(customer.customerId);
     $('#txtCusId').val(customer.customerId);
@@ -66,14 +88,18 @@ function setCustomerDetails(customer) {
 
 function loadMyCarRentsToTable(customerId) {
     $('#allCarRentalsTable').empty();
+    $('#bookingResponsesTable').empty();
+
     $.ajax({
         url: "http://localhost:8080/Car_Rental_BackEnd_war/api/v1/CarRent/getMyCarRents/" + customerId,
         method: "GET",
         success: function (res) {
             for (const carRent of res.data) {
-                let row = `<tr><td>${carRent.rentId}</td><td>${carRent.date}</td><td>${carRent.pickUpDate}</td><td>${carRent.returnDate}</td><td>${carRent.car.registrationNO}</td><td>${carRent.customer.customerId}</td><td>${carRent.driver.licenceNo}</td></tr>`;
+                let row = `<tr><td>${carRent.rentId}</td><td>${carRent.date}</td><td>${carRent.pickUpDate}</td><td>${carRent.returnDate}</td><td>${carRent.car.registrationNO}</td><td>${carRent.customer.customerId}</td><td>${carRent.driver.licenceNo}</td><td>${carRent.status}</td></tr>`;
                 $('#allCarRentalsTable').append(row);
+                $('#bookingResponsesTable').append(row);
             }
+            bindBookingResponsesTableCliskEvents();
         }
     })
 }
@@ -519,8 +545,56 @@ function addCarRent(customer, car, driver) {
         data: JSON.stringify(carRent),
         success: function (res) {
             getLastRent(rentId, customer);
+
+            swal({
+                title: "Confirmation",
+                text: "Rental Request send successfully",
+                icon: "success",
+                button: "Close",
+                timer: 2000
+            });
+        },
+        error:function (ob) {
+            swal({
+                title: "Error",
+                text: "Error Occured.Please Try Again.",
+                icon: "error",
+                button: "Close",
+                timer: 2000
+            });
         }
     })
+}
+
+function clearCarRentFields() {
+    // $('#cmbType').find('option:selected').text("- Select Car Type -");
+    $('#cmbRegistrationNo').find('option:selected').text("");
+    $('#txtCarBrand').val("");
+    $('#txtCarColor').val("");
+    $('#txtCarFuel').val("");
+    $('#txtCarTransmission').val("");
+    $('#txtCarNoOfPassengers').val("");
+    $('#txtCarDailyRate').val("");
+    $('#txtCarMonthlyRate').val("");
+    $('#txtCarFreeKmForPrice').val("");
+    $('#txtCarFreeKmForDuration').val("");
+    $('#txtCarLossDamageWavier').val("");
+    $('#txtCarPriceForExtraKm').val("");
+    $('#txtCarCompleteKm').val("");
+    $('#divCarFrontView').empty();
+    $('#divCarBackView').empty();
+    $('#divCarSideView').empty();
+    $('#divCarInteriorView').empty();
+    $('#txtCarPickupDate').val("");
+    $('#txtCarReturnDate').val("");
+    $('#needDriver').prop('checked', false);
+    $('#txtDriverLicenceNo').val("");
+    $('#txtDriverName').val("");
+    $('#txtDriverAddress').val("");
+    $('#txtDriverContactNo').val("");
+    $('#txtDriverNIC').val("");
+    $('#txtPaymentAmount').val("");
+    $('#txtPaymentAmount').css('border', '1px solid #ced4da');
 }
 
 function getLastRent(rentId, customer) {
@@ -548,12 +622,145 @@ function addAdvancedPayment(carRent, customer) {
     }
 
     $.ajax({
-        url:baseUrl + "api/v1/payment",
-        method:"POST",
-        contentType:"application/json",
-        data:JSON.stringify(payment),
-        success:function (res) {
+        url: baseUrl + "api/v1/payment",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(payment),
+        success: function (res) {
             console.log("Payment Success");
+            loadMyCarRentsToTable(customer.customerId);
+            clearCarRentFields();
+            generateRentId();
+            generatePaymentId();
         }
     })
 }
+
+$('#btnCancleRental').click(function () {
+    clearCarRentFields();
+    loadMyCarRentsToTable($('#txtCustId').val());
+    generateRentId();
+    generatePaymentId();
+})
+
+$('#btnDeleteRental').click(function () {
+    if ($('#txtRentId').val() != "") {
+        if ($('#txtRentStatus').val() === "Pending") {
+            let res = confirm("Do you want to delete this booking?");
+            if (res) {
+                cancleRental();
+            }
+        } else {
+            alert("You can't delete this booking...");
+        }
+    } else {
+        alert("Please select a rental")
+    }
+})
+
+function cancleRental() {
+    let rentId = $('#txtRentId').val();
+    let licenceNo = $('#txtLicenceNo').val();
+    let registrationNo = $('#txtRegistrationNo').val();
+    let customerId = $('#txtRentCustId').val();
+    let status = "Cancelled";
+
+    /*$.ajax({
+        url:baseUrl + "api/v1/payment/delete/" + rentId,
+        method:"DELETE",
+        success:function (res) {
+            console.log("Deleted Payment");
+            deleteCarRent(rentId,licenceNo,registrationNo,customerId);
+            /!*let status = "Available";
+            updateCarStatusByRegNo(status,registrationNo);
+            updateDriverStatusByLicenceNo(licenceNo);
+            generateRentId();
+            generatePaymentId();
+            clearCarRentResponseFields();*!/
+        }
+    })*/
+
+    $.ajax({
+        url: baseUrl + "api/v1/CarRent/" + rentId + "/" + status,
+        method: "PUT",
+        success: function (res) {
+            deletePayment(rentId,licenceNo,registrationNo);
+            loadMyCarRentsToTable(customerId);
+            swal({
+                title: "Confirmation",
+                text: "Booking Canceled...",
+                icon: "success",
+                button: "Close",
+                timer: 2000
+            });
+        }
+    })
+}
+
+/*function deleteCarRent(rentId, licenceNo, registrationNo, customerId) {
+    let status = "Available";
+
+    $.ajax({
+        url:baseUrl+"api/v1/CarRent?rentId=" + rentId,
+        method:"DELETE",
+        success:function (res) {
+            updateCarStatusByRegNo(status,registrationNo);
+            updateDriverStatusByLicenceNo(licenceNo);
+            generateRentId();
+            generatePaymentId();
+            clearCarRentResponseFields();
+            loadMyCarRentsToTable(customerId);
+        }
+    })
+}*/
+
+function clearCarRentResponseFields() {
+    $('#txtRentId').val("");
+    $('#txtDate').val("");
+    $('#txtPickupDate').val("");
+    $('#txtReturnDate').val("");
+    $('#txtRegistrationNo').val("");
+    $('#txtLicenceNo').val("");
+    $('#txtRentStatus').val("");
+    $('#txtRentCustId').val("");
+}
+
+function deletePayment(rentId,licenceNo,registrationNo) {
+    $.ajax({
+        url:baseUrl + "api/v1/payment/delete/" + rentId,
+        method:"DELETE",
+        success:function (res) {
+            console.log("Deleted Payment");
+            let status = "Available";
+            updateCarStatusByRegNo(status,registrationNo);
+            updateDriverStatusByLicenceNo(licenceNo);
+            generateRentId();
+            generatePaymentId();
+            clearCarRentResponseFields();
+        }
+    })
+}
+
+function updateCarStatusByRegNo(status,registrationNo) {
+    $.ajax({
+        url:baseUrl + "api/v1/car/updateCarStatus/" + registrationNo + "/" + status,
+        method:"PUT",
+        success:function (res) {
+            console.log("Update Car Status");
+        }
+    })
+}
+
+function updateDriverStatusByLicenceNo(licenceNo) {
+    $.ajax({
+        url:baseUrl + "api/v1/driver/updateAvailable/" + licenceNo,
+        method:"PUT",
+        success:function (res) {
+            console.log("Update Driver Status");
+        }
+    })
+}
+
+$('#btnClearRental').click(function () {
+    clearCarRentResponseFields();
+})
