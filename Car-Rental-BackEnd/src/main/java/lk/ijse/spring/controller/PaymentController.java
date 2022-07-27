@@ -29,7 +29,7 @@ public class PaymentController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseUtil savePayment(PaymentDTO dto) {
+    public ResponseUtil savePayment(@RequestBody PaymentDTO dto) {
         service.savePayment(dto);
         return new ResponseUtil(200, "Saved", null);
     }

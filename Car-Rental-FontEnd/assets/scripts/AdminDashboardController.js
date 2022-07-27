@@ -164,7 +164,8 @@ function loadTodayBookings() {
         method: "GET",
         success: function (res) {
             for (const booking of res.data) {
-                let row = `<tr><td>${booking.rentId}</td><td>${booking.date}</td><td>${booking.pickUpDate}</td><td>${booking.returnDate}</td><td>${booking.customer.customerId}</td><td>${booking.car.registrationNo}</td><td>${booking.driver.licenceNo}</td></tr>`;
+                console.log(booking);
+                let row = `<tr><td>${booking.rentId}</td><td>${booking.date}</td><td>${booking.pickUpDate}</td><td>${booking.returnDate}</td><td>${booking.customer.customerId}</td><td>${booking.car.registrationNO}</td><td>${booking.driver.licenceNo}</td><td>${booking.status}</td></tr>`;
                 $('#todayBookingTable').append(row);
             }
         }
@@ -1730,6 +1731,8 @@ function acceptRental() {
             loadAllRentals();
             loadPendingRentals();
             loadTodayBookings();
+            updateDriverStatus();
+            updateCarStatus();
             clearRentalRequestFields();
             swal({
                 title: "Confirmation!",
@@ -1747,6 +1750,38 @@ function acceptRental() {
                 button: "Close",
                 timer: 2000
             });
+        }
+    })
+}
+
+function updateCarStatus() {
+    let registrationNO = $('#txtCarRegistrationNo').val();
+    let status = "Non-Available";
+
+    $.ajax({
+        url:baseUrl + "api/v1/car/updateCarStatus/" + registrationNO + "/" + status,
+        method:"PUT",
+        success:function (res) {
+            loadAllCars();
+            getAvailableCarCount();
+            getReservedCarsCount();
+        }
+
+    })
+}
+
+function updateDriverStatus() {
+    let licenceNo = $('#txtDLicenceNo').val();
+
+    $.ajax({
+        url:baseUrl + "api/v1/driver/updateNonAvailable/" + licenceNo,
+        method:"PUT",
+        success:function (res) {
+            loadAvailableDrivers();
+            loadNonAvailableDrivers();
+            loadAllDrivers();
+            getAvailableDriverCount();
+            getOccupiedDriverCount();
         }
     })
 }

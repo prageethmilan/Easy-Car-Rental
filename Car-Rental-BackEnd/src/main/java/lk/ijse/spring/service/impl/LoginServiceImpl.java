@@ -26,10 +26,9 @@ public class LoginServiceImpl implements LoginService {
     ModelMapper mapper;
 
 
-
     @Override
     public void saveLogData(LoginDTO dto) {
-        if (!repo.existsById(dto.getLoginId())){
+        if (!repo.existsById(dto.getLoginId())) {
             repo.save(mapper.map(dto, Login.class));
         } else {
             throw new RuntimeException("Login Already Exists");
@@ -45,14 +44,16 @@ public class LoginServiceImpl implements LoginService {
             int tempId = Integer.parseInt(lastId.split("-")[1]);
             tempId = tempId + 1;
             if (tempId <= 9) {
-                id = "Log-00" + tempId;
+                id = "Log-000" + tempId;
             } else if (tempId <= 99) {
-                id = "Log-0" + tempId;
+                id = "Log-00" + tempId;
             } else if (tempId <= 999) {
+                id = "Log-0" + tempId;
+            } else if (tempId <= 9999) {
                 id = "Log-" + tempId;
             }
         } else {
-            id = "Log-001";
+            id = "Log-0001";
         }
         return id;
     }
@@ -64,8 +65,8 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public LoginDTO searchLogin(String loginId) {
-        if (repo.existsById(loginId)){
-            return mapper.map(repo.findById(loginId).get(),LoginDTO.class);
+        if (repo.existsById(loginId)) {
+            return mapper.map(repo.findById(loginId).get(), LoginDTO.class);
         } else {
             throw new RuntimeException("Login Not Found...");
         }

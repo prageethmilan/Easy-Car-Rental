@@ -513,12 +513,47 @@ function addCarRent(customer, car, driver) {
 
 
     $.ajax({
-        url:baseUrl + "api/v1/CarRent",
-        method:"POST",
+        url: baseUrl + "api/v1/CarRent",
+        method: "POST",
         contentType: "application/json",
         data: JSON.stringify(carRent),
+        success: function (res) {
+            getLastRent(rentId, customer);
+        }
+    })
+}
+
+function getLastRent(rentId, customer) {
+    $.ajax({
+        url: baseUrl + "api/v1/CarRent/" + rentId,
+        method: "GET",
+        success: function (res) {
+            let carRent = res.data;
+            addAdvancedPayment(carRent, customer);
+        }
+    })
+}
+
+function addAdvancedPayment(carRent, customer) {
+    let paymentId = $('#txtPaymentId').val();
+    let today = $('#txtCarTodayDate').val();
+    let amount = $('#txtPaymentAmount').val();
+
+    var payment = {
+        paymentId: paymentId,
+        date: today,
+        amount: amount,
+        rental: carRent,
+        customer: customer
+    }
+
+    $.ajax({
+        url:baseUrl + "api/v1/payment",
+        method:"POST",
+        contentType:"application/json",
+        data:JSON.stringify(payment),
         success:function (res) {
-            console.log("Saved");
+            console.log("Payment Success");
         }
     })
 }
