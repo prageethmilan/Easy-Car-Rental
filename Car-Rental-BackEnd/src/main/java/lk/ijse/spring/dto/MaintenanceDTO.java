@@ -22,4 +22,5 @@ public class MaintenanceDTO {
     private LocalDate date;
     private String details;
     private CarDTO car;
+    private double cost;
 }

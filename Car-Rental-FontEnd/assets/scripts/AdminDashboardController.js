@@ -19,6 +19,7 @@ $(function () {
     loadAllRentals();
     loadAllPayments();
     loadPendingRentals();
+    generateMaintenanceId();
 });
 
 let today = new Date().toISOString().slice(0, 10);
@@ -42,6 +43,8 @@ let regAddress = /^[A-z ,.0-9]{3,}$/;
 let regContactNo = /^(0)[1-9][0-9][0-9]{7}$/;
 let regNicNo = /^[0-9]{9}(V)|[0-9]{12}$/;
 let regRentId = /^(RT0-)[0-9]{4}$/;
+
+$('#txtToday').val(today);
 
 function getRegisterCustomersCount() {
     $.ajax({
@@ -1759,9 +1762,9 @@ function updateCarStatus() {
     let status = "Non-Available";
 
     $.ajax({
-        url:baseUrl + "api/v1/car/updateCarStatus/" + registrationNO + "/" + status,
-        method:"PUT",
-        success:function (res) {
+        url: baseUrl + "api/v1/car/updateCarStatus/" + registrationNO + "/" + status,
+        method: "PUT",
+        success: function (res) {
             loadAllCars();
             getAvailableCarCount();
             getReservedCarsCount();
@@ -1774,9 +1777,9 @@ function updateDriverStatus() {
     let licenceNo = $('#txtDLicenceNo').val();
 
     $.ajax({
-        url:baseUrl + "api/v1/driver/updateNonAvailable/" + licenceNo,
-        method:"PUT",
-        success:function (res) {
+        url: baseUrl + "api/v1/driver/updateNonAvailable/" + licenceNo,
+        method: "PUT",
+        success: function (res) {
             loadAvailableDrivers();
             loadNonAvailableDrivers();
             loadAllDrivers();
@@ -1894,4 +1897,89 @@ $('#btnSearchRentalRequest').click(function () {
         searchRentalRequest();
     }
 })
+
+$('#txtSearchRegistrationNo').on('keyup', function (event) {
+    checkSearchRegNo();
+    if (event.key === "Enter") {
+        if (regRegNo.test($('#txtSearchRegistrationNo').val())) {
+            searchCarByRegistrationNo($('#txtSearchRegistrationNo').val());
+        }
+    }
+})
+
+function checkSearchRegNo() {
+    let regNo = $('#txtSearchRegistrationNo').val();
+    if (regRegNo.test(regNo)) {
+        $('#txtSearchRegistrationNo').css('border', '2px solid green');
+        return true;
+    } else {
+        $('#txtSearchRegistrationNo').css('border', '2px solid red');
+        return false;
+    }
+}
+
+function searchCarByRegistrationNo(registrationNo) {
+    $.ajax({
+        url: baseUrl + "api/v1/car/" + registrationNo,
+        method: "GET",
+        success: function (res) {
+            let car = res.data;
+            $('#txtSearchBrand').val(car.brand);
+            $('#txtSearchType').val(car.type);
+            $('#txtSearchTransmission').val(car.transmissionType);
+            $('#txtSearchColor').val(car.color);
+            $('#txtSearchStatus').val(car.status);
+        }
+    })
+}
+
+$('#btnAddToMaintenance').click(function () {
+    if ($('#txtSearchRegistrationNo').val() != "") {
+        let registrationNo = $('#txtSearchRegistrationNo').val();
+        addToMaintenance(registrationNo);
+    } else {
+        alert("Please select a car");
+    }
+})
+
+function addToMaintenance(registrationNo) {
+    let status = "Under Maintenance";
+    $.ajax({
+        url: baseUrl + "api/v1/car/updateCarStatus/" + registrationNo + "/" + status,
+        method: "PUT",
+        success:function (res) {
+            loadAllCars();
+            clearCarMaintenanceFields();
+            getAvailableCarCount();
+            getReservedCarsCount();
+            swal({
+                title: "Confirmation!",
+                text: "Car add to maintenance",
+                icon: "success",
+                button: "Close",
+                timer: 2000
+            });
+        }
+    })
+}
+
+function clearCarMaintenanceFields() {
+    $('#txtSearchRegistrationNo').val("");
+    $('#txtSearchBrand').val("");
+    $('#txtSearchType').val("");
+    $('#txtSearchTransmission').val("");
+    $('#txtSearchColor').val("");
+    $('#txtSearchStatus').val("");
+    $('#txtSearchRegistrationNo').css('border', '1px solid #ced4da');
+}
+
+function generateMaintenanceId() {
+    $.ajax({
+        url:baseUrl + "api/v1/maintenance/generateMaintenanceId",
+        method:"GET",
+        success: function (res) {
+            $('#txtMaintenanceId').val(res.data);
+        }
+    })
+}
 

@@ -22,7 +22,7 @@ public interface CarRentRepo extends JpaRepository<CarRent, String> {
 
     List<CarRent> getAllByStatus(String status);
 
-    @Query(value = "SELECT cr from CarRent cr where cr.status=:status AND cr.driver.licenceNo=:licenceNo", nativeQuery = true)
+    @Query(value = "SELECT * from CarRent where status=:status AND licenceNo=:licenceNo", nativeQuery = true)
     List<CarRent> getAllByDrivingLicenceNo(@Param("status") String status, @Param("licenceNo") String licenceNo);
 
     @Query(value = "SELECT rentId FROM CarRent ORDER BY rentId DESC LIMIT 1",nativeQuery = true)

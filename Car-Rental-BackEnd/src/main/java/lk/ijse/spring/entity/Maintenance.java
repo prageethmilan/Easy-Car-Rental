@@ -23,7 +23,7 @@ public class Maintenance {
     private String maintenanceId;
     private String date;
     private String details;
-    private final double cost = 0.0;
+    private double cost;
 
     @ManyToOne
     @JoinColumn(name = "registrationNO", referencedColumnName = "registrationNO", nullable = false)
