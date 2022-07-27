@@ -1894,3 +1894,4 @@ $('#btnSearchRentalRequest').click(function () {
         searchRentalRequest();
     }
 })
+
