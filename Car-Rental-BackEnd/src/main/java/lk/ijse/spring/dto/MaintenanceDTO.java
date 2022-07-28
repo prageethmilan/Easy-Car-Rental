@@ -19,7 +19,7 @@ import java.time.LocalDate;
 public class MaintenanceDTO {
     private String maintenanceId;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate date;
+    private String date;
     private String details;
     private CarDTO car;
     private double cost;

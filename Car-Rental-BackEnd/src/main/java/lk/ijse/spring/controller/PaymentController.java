@@ -52,7 +52,8 @@ public class PaymentController {
     }
 
     @GetMapping(path = "/{fromDate}/{toDate}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseUtil getAllPaymentsByDateRange(@PathVariable LocalDate fromDate, @PathVariable LocalDate toDate) {
+    public ResponseUtil getAllPaymentsByDateRange(@PathVariable String fromDate, @PathVariable String toDate) {
+        System.out.println(fromDate + "/" + toDate);
         return new ResponseUtil(200, "Ok", service.getAllPaymentsByDateRange(fromDate, toDate));
     }
 

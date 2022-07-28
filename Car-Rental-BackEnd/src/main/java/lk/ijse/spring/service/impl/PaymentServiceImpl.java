@@ -70,7 +70,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public List<PaymentDTO> getAllPaymentsByDateRange(LocalDate fromDate, LocalDate toDate) {
+    public List<PaymentDTO> getAllPaymentsByDateRange(String fromDate, String toDate) {
         return mapper.map(repo.getAllPaymentsByDateRange(fromDate, toDate), new TypeToken<List<PaymentDTO>>() {
         }.getType());
     }

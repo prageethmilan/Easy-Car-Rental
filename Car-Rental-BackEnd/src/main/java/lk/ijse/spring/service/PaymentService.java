@@ -20,7 +20,7 @@ public interface PaymentService {
 
     List<PaymentDTO> getAllPayments();
 
-    List<PaymentDTO> getAllPaymentsByDateRange(LocalDate fromDate, LocalDate toDate);
+    List<PaymentDTO> getAllPaymentsByDateRange(String fromDate, String toDate);
 
     List<PaymentDTO> getAllPaymentsByCustomerId(String customerId);
 

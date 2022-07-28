@@ -20,6 +20,8 @@ $(function () {
     loadAllPayments();
     loadPendingRentals();
     generateMaintenanceId();
+    loadAllUnderMaintenanceCars();
+    loadAllMaintenances();
 });
 
 let today = new Date().toISOString().slice(0, 10);
@@ -1651,9 +1653,19 @@ function searchPaymentByDate() {
                 let row = `<tr><td>${payment.paymentId}</td><td>${payment.date}</td><td>${payment.amount}</td><td>${payment.rental.rentId}</td><td>${payment.customer.customerId}</td></tr>`;
                 $('#tblPayments').append(row);
             }
+
+            if (res.data.length===0){
+                clearPaymentDateFields();
+                swal({
+                    title: "Error!",
+                    text: "Payments Not Found",
+                    icon: "error",
+                    button: "Close",
+                    timer: 2000
+                });
+            }
         },
         error: function (ob) {
-            loadAllPayments();
             clearPaymentDateFields();
             swal({
                 title: "Error!",
@@ -1935,8 +1947,12 @@ function searchCarByRegistrationNo(registrationNo) {
 
 $('#btnAddToMaintenance').click(function () {
     if ($('#txtSearchRegistrationNo').val() != "") {
-        let registrationNo = $('#txtSearchRegistrationNo').val();
-        addToMaintenance(registrationNo);
+        if ($('#txtSearchStatus').val()!="Non-Available") {
+            let registrationNo = $('#txtSearchRegistrationNo').val();
+            addToMaintenance(registrationNo);
+        } else {
+            alert("Car is not available in this time.")
+        }
     } else {
         alert("Please select a car");
     }
@@ -1983,3 +1999,44 @@ function generateMaintenanceId() {
     })
 }
 
+function loadAllUnderMaintenanceCars() {
+    let status = "Under Maintenance";
+
+    $('#tblCarUnderMaintenance').empty();
+    $.ajax({
+        url:baseUrl + "api/v1/car/getByStatus/" + status,
+        method:"GET",
+        success:function (res) {
+            for (let car of res.data) {
+                let row = `<tr><td>${car.registrationNO}</td><td>${car.brand}</td><td>${car.type}</td><td>${car.noOfPassengers}</td><td>${car.transmissionType}</td><td>${car.fuelType}</td><td>${car.color}</td><td>${car.dailyRate}</td><td>${car.monthlyRate}</td><td>${car.freeKmForPrice}</td><td>${car.freeKmForDuration}</td><td>${car.lossDamageWaiver}</td><td>${car.priceForExtraKm}</td><td>${car.completeKm}</td><td>${car.status}</td></tr>`;
+                $('#tblCarUnderMaintenance').append(row);
+            }
+        }
+    })
+}
+
+function loadAllMaintenances() {
+    $('#tblAllMaintenances').empty();
+
+    $.ajax({
+        url:baseUrl + "api/v1/maintenance",
+        method:"GET",
+        success:function (res) {
+            for (let maintenance of res.data) {
+                let row = `<tr><td>${maintenance.maintenanceId}</td><td>${maintenance.car.registrationNO}</td><td>${maintenance.date}</td><td>${maintenance.details}</td><td>${maintenance.cost}</td></tr>`;
+                $('#tblAllMaintenances').append(row);
+            }
+        }
+    })
+}
+
+$('#txtCarRegNo').on('keyup',function (event) {
+    checkCarRegNo();
+})
+
+function checkCarRegNo() {
+    let regNo = $('#txtCarRegNo').val();
+    if (regRegNo.test(regNo)){
+        $('#txtCarRegNo').css('border','2px solid')
+    }
+}

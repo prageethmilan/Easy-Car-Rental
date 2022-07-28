@@ -15,8 +15,8 @@ import java.util.Optional;
  **/
 public interface PaymentRepo extends JpaRepository<Payment, String> {
 
-    @Query(value = "SELECT * FROM Payment WHERE date BETWEEN :fromDate TO :toDate", nativeQuery = true)
-    List<Payment> getAllPaymentsByDateRange(@Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate);
+    @Query(value = "SELECT * FROM Payment WHERE date BETWEEN :fromDate AND :toDate", nativeQuery = true)
+    List<Payment> getAllPaymentsByDateRange(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
 
 
     @Query(value = "SELECT * FROM Payment WHERE customerId=:customerId", nativeQuery = true)
