@@ -45,6 +45,7 @@ let regAddress = /^[A-z ,.0-9]{3,}$/;
 let regContactNo = /^(0)[1-9][0-9][0-9]{7}$/;
 let regNicNo = /^[0-9]{9}(V)|[0-9]{12}$/;
 let regRentId = /^(RT0-)[0-9]{4}$/;
+let regDetails = /^[A-z0-9 &.,/]{4,}$/;
 
 $('#txtToday').val(today);
 
@@ -1654,7 +1655,7 @@ function searchPaymentByDate() {
                 $('#tblPayments').append(row);
             }
 
-            if (res.data.length===0){
+            if (res.data.length === 0) {
                 clearPaymentDateFields();
                 swal({
                     title: "Error!",
@@ -1947,7 +1948,7 @@ function searchCarByRegistrationNo(registrationNo) {
 
 $('#btnAddToMaintenance').click(function () {
     if ($('#txtSearchRegistrationNo').val() != "") {
-        if ($('#txtSearchStatus').val()!="Non-Available") {
+        if ($('#txtSearchStatus').val() != "Non-Available") {
             let registrationNo = $('#txtSearchRegistrationNo').val();
             addToMaintenance(registrationNo);
         } else {
@@ -1963,11 +1964,12 @@ function addToMaintenance(registrationNo) {
     $.ajax({
         url: baseUrl + "api/v1/car/updateCarStatus/" + registrationNo + "/" + status,
         method: "PUT",
-        success:function (res) {
+        success: function (res) {
             loadAllCars();
             clearCarMaintenanceFields();
             getAvailableCarCount();
             getReservedCarsCount();
+            loadAllUnderMaintenanceCars();
             swal({
                 title: "Confirmation!",
                 text: "Car add to maintenance",
@@ -1991,8 +1993,8 @@ function clearCarMaintenanceFields() {
 
 function generateMaintenanceId() {
     $.ajax({
-        url:baseUrl + "api/v1/maintenance/generateMaintenanceId",
-        method:"GET",
+        url: baseUrl + "api/v1/maintenance/generateMaintenanceId",
+        method: "GET",
         success: function (res) {
             $('#txtMaintenanceId').val(res.data);
         }
@@ -2004,9 +2006,9 @@ function loadAllUnderMaintenanceCars() {
 
     $('#tblCarUnderMaintenance').empty();
     $.ajax({
-        url:baseUrl + "api/v1/car/getByStatus/" + status,
-        method:"GET",
-        success:function (res) {
+        url: baseUrl + "api/v1/car/getByStatus/" + status,
+        method: "GET",
+        success: function (res) {
             for (let car of res.data) {
                 let row = `<tr><td>${car.registrationNO}</td><td>${car.brand}</td><td>${car.type}</td><td>${car.noOfPassengers}</td><td>${car.transmissionType}</td><td>${car.fuelType}</td><td>${car.color}</td><td>${car.dailyRate}</td><td>${car.monthlyRate}</td><td>${car.freeKmForPrice}</td><td>${car.freeKmForDuration}</td><td>${car.lossDamageWaiver}</td><td>${car.priceForExtraKm}</td><td>${car.completeKm}</td><td>${car.status}</td></tr>`;
                 $('#tblCarUnderMaintenance').append(row);
@@ -2019,9 +2021,9 @@ function loadAllMaintenances() {
     $('#tblAllMaintenances').empty();
 
     $.ajax({
-        url:baseUrl + "api/v1/maintenance",
-        method:"GET",
-        success:function (res) {
+        url: baseUrl + "api/v1/maintenance",
+        method: "GET",
+        success: function (res) {
             for (let maintenance of res.data) {
                 let row = `<tr><td>${maintenance.maintenanceId}</td><td>${maintenance.car.registrationNO}</td><td>${maintenance.date}</td><td>${maintenance.details}</td><td>${maintenance.cost}</td></tr>`;
                 $('#tblAllMaintenances').append(row);
@@ -2030,13 +2032,155 @@ function loadAllMaintenances() {
     })
 }
 
-$('#txtCarRegNo').on('keyup',function (event) {
+$('#txtCarRegNo').on('keyup', function (event) {
     checkCarRegNo();
+    if (event.key==="Enter"){
+        if (regRegNo.test($('#txtCarRegNo').val())){
+            $('#txtCost').focus();
+        } else {
+            $('#txtCarRegNo').focus();
+        }
+    }
 })
 
 function checkCarRegNo() {
     let regNo = $('#txtCarRegNo').val();
-    if (regRegNo.test(regNo)){
-        $('#txtCarRegNo').css('border','2px solid')
+    if (regRegNo.test(regNo)) {
+        $('#txtCarRegNo').css('border', '2px solid green');
+        return true;
+    } else {
+        $('#txtCarRegNo').css('border', '2px solid red');
+        return false;
     }
 }
+
+$('#txtCost').on('keyup', function (event) {
+    checkCarMaintenanceCost();
+    if (event.key==="Enter"){
+        if (regDailyRate.test($('#txtCost').val())){
+            $('#txtMaintenanceDetails').focus();
+        } else {
+            $('#txtCost').focus();
+        }
+    }
+})
+
+function checkCarMaintenanceCost() {
+    let cost = $('#txtCost').val();
+    if (regDailyRate.test(cost)) {
+        $('#txtCost').css('border', '2px solid green');
+        return true;
+    } else {
+        $('#txtCost').css('border', '2px solid red');
+        return false;
+    }
+}
+
+$('#txtMaintenanceDetails').on('keyup', function (event) {
+    checkCarMaintenanceDetails();
+})
+
+function checkCarMaintenanceDetails() {
+    let details = $('#txtMaintenanceDetails').val();
+    if (regDetails.test(details)) {
+        $('#txtMaintenanceDetails').css('border', '2px solid green');
+        return true;
+    } else {
+        $('#txtMaintenanceDetails').css('border', '2px solid red');
+        return false;
+    }
+}
+
+$('#btnMaintenancePaid').click(function () {
+    if ($('#txtCarRegNo').val() != "" && $('#txtCost').val() != "" && $('#txtMaintenanceDetails').val() != "") {
+        searchMaintenanceCar();
+    } else {
+        alert("Please fill all fields...")
+    }
+})
+
+function searchMaintenanceCar() {
+    let registrationNo = $('#txtCarRegNo').val();
+
+    $.ajax({
+        url: baseUrl + "api/v1/car/" + registrationNo,
+        method: "GET",
+        success: function (res) {
+            let car = res.data;
+            console.log(car);
+            addPaymentToMaintenance(car);
+
+        }
+    })
+}
+
+function addPaymentToMaintenance(car) {
+    let maintenanceId = $('#txtMaintenanceId').val();
+    let today = $('#txtToday').val();
+    let cost = $('#txtCost').val();
+    let maintenanceDetails = $('#txtMaintenanceDetails').val();
+
+    var maintenance = {
+        maintenanceId: maintenanceId,
+        date: today,
+        details: maintenanceDetails,
+        car: car,
+        cost: cost
+    }
+
+    $.ajax({
+        url:baseUrl + "api/v1/maintenance",
+        method:"POST",
+        contentType:"application/json",
+        data:JSON.stringify(maintenance),
+        success:function (res) {
+            updateCarStatusToAvailable(car.registrationNO);
+        }
+    })
+}
+
+function updateCarStatusToAvailable(registrationNo) {
+    let status = "Available";
+
+    $.ajax({
+        url:baseUrl + "api/v1/car/updateCarStatus/" + registrationNo + "/" + status,
+        method:"PUT",
+        success:function (res) {
+            getAvailableCarCount();
+            loadAllCars();
+            loadAllUnderMaintenanceCars();
+            loadAllMaintenances();
+            generateMaintenanceId();
+            clearPaidFields();
+
+            swal({
+                title: "Confirmation!",
+                text: "Maintenance Cost Paid",
+                icon: "success",
+                button: "Close",
+                timer: 2000
+            });
+        }
+    })
+}
+
+function clearPaidFields() {
+    $('#txtCarRegNo').val("");
+    $('#txtCost').val("");
+    $('#txtMaintenanceDetails').val("");
+    $('#txtCarRegNo').css('border', '1px solid #ced4da');
+    $('#txtCost').css('border', '1px solid #ced4da');
+    $('#txtMaintenanceDetails').css('border', '1px solid #ced4da');
+}
+
+$('#btnClearMaintenance').click(function () {
+    clearCarMaintenanceFields();
+    loadAllUnderMaintenanceCars();
+    loadAllMaintenances();
+})
+
+$('#btnClearPaid').click(function () {
+    clearPaidFields();
+    loadAllMaintenances();
+    loadAllUnderMaintenanceCars();
+})

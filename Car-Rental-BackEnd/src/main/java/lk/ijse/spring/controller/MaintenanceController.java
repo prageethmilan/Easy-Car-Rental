@@ -27,7 +27,8 @@ public class MaintenanceController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseUtil addMaintenance(MaintenanceDTO dto) {
+    public ResponseUtil addMaintenance(@RequestBody MaintenanceDTO dto) {
+        System.out.println(dto.toString());
         service.addMaintenance(dto);
         return new ResponseUtil(200, "Saved", null);
     }
