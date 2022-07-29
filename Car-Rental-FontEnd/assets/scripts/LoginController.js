@@ -665,6 +665,13 @@ function loginSave(userType, username, password) {
             }
         ),
         success: function (res) {
+            if (userType==="Admin"){
+                location.replace("AdminDashboard.html");
+            } else if (userType==="Customer"){
+                location.replace("CustomerDashboard.html");
+            } else if (userType==="Driver"){
+                location.replace("DriverDashboard.html");
+            }
             console.log("Login data saved");
         }
     })
@@ -691,7 +698,7 @@ function searchAdmin(userType, username, password) {
         success: function (res) {
             if (res.data === true) {
                 loginSave(userType, username, password);
-                location.replace("AdminDashboard.html");
+
             } else {
                 alert(res.massage);
             }
@@ -707,7 +714,6 @@ function searchCustomer(userType, username, password) {
             console.log(res.data);
             if (res.data === true) {
                 loginSave(userType, username, password);
-                location.replace("CustomerDashboard.html");
             } else {
                 alert(res.massage);
             }
@@ -723,7 +729,6 @@ function searchDriver(userType, username, password) {
             console.log(res.data);
             if (res.data === true) {
                 loginSave(userType, username, password);
-                location.replace("DriverDashboard.html");
             } else {
                 alert(res.massage);
             }

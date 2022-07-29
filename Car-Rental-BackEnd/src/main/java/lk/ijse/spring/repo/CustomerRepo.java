@@ -15,6 +15,7 @@ import java.util.Optional;
  * @created : 07/07/2022 - 7:21 PM
  **/
 public interface CustomerRepo extends JpaRepository<Customer, String> {
+
     Optional<Customer> findCustomerByUsername(String username);
 
     Optional<Customer> findCustomerByPassword(String password);
@@ -48,6 +49,6 @@ public interface CustomerRepo extends JpaRepository<Customer, String> {
 
     @Modifying
     @Transactional
-    @Query(value = "UPDATE Customer SET name=:name,address=:address,email=:email,contactNo=:contactNo,nicNo=:nicNo,licenceNo=:licenceNo,username=:username WHERE customerId=:customerId", nativeQuery = true)
-    void updateCustomer(@Param("customerId") String customerId, @Param("name") String name, @Param("address") String address, @Param("email") String email, @Param("contactNo") int contactNo, @Param("nicNo") String nicNo, @Param("licenceNo") String licenceNo, @Param("username") String username);
+    @Query(value = "UPDATE Customer SET name=:name,address=:address,email=:email,contactNo=:contactNo,nicNo=:nicNo,licenceNo=:licenceNo WHERE customerId=:customerId", nativeQuery = true)
+    void updateCustomer(@Param("customerId") String customerId, @Param("name") String name, @Param("address") String address, @Param("email") String email, @Param("contactNo") int contactNo, @Param("nicNo") String nicNo, @Param("licenceNo") String licenceNo);
 }

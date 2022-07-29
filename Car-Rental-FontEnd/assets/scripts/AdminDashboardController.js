@@ -1792,6 +1792,7 @@ function acceptRental() {
             updateDriverStatus();
             updateCarStatus();
             clearRentalRequestFields();
+            loadAllAcceptedRentals();
             swal({
                 title: "Confirmation!",
                 text: "Car Rental Accepted Successfully",

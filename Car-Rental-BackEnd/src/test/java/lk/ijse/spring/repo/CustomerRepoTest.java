@@ -29,9 +29,12 @@ class CustomerRepoTest {
 
     @Test
     public void testSearch(){
-        Optional<Customer> customer = repo.findCustomerByUsernameAndPassword("prageeth", "prageeth");
+        /*Optional<Customer> customer = repo.findCustomerByUsernameAndPassword("prageeth", "prageeth");
         Customer customer1 = customer.get();
-        System.out.println(customer1);
+        System.out.println(customer1);*/
+        Optional<Customer> prageeth = repo.findCustomerByUsernameAndPassword("prageeth", "11111111");
+        boolean present = prageeth.isPresent();
+        System.out.println(present);
     }
 
     @Test

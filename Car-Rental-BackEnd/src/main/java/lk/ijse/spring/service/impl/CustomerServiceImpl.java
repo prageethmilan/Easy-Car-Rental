@@ -38,7 +38,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void updateCustomer(CustomerDTO dto) {
         if (repo.existsById(dto.getCustomerId())) {
-            repo.updateCustomer(dto.getCustomerId(),dto.getName(),dto.getAddress(),dto.getEmail(),dto.getContactNo(),dto.getNicNo(),dto.getLicenceNo(),dto.getUsername());
+            repo.updateCustomer(dto.getCustomerId(),dto.getName(),dto.getAddress(),dto.getEmail(),dto.getContactNo(),dto.getNicNo(),dto.getLicenceNo());
         } else {
             throw new RuntimeException("No Such Customer To Update");
         }

@@ -288,6 +288,7 @@ function updateCustomer() {
         data: JSON.stringify(customer),
         success: function (res) {
             getLastLoginUser();
+            clearCustomerDetails();
             swal({
                 title: "Confirmation!",
                 text: "Customer Updated Successfully",
@@ -319,7 +320,18 @@ $('#btnUpdateCustomer').click(function () {
 
 $('#btnRefreshCustomer').click(function () {
     getLastLoginUser();
+    clearCustomerDetails();
 })
+
+function clearCustomerDetails() {
+    $('#txtCusId').css('border','2px solid #ced4da');
+    $('#txtCusName').css('border','2px solid #ced4da');
+    $('#txtCusAddress').css('border','2px solid #ced4da');
+    $('#txtCusEmail').css('border','2px solid #ced4da');
+    $('#txtCusContactNo').css('border','2px solid #ced4da');
+    $('#txtCusNIC').css('border','2px solid #ced4da');
+    $('#txtCusLicenceNo').css('border','2px solid #ced4da');
+}
 
 $('#cmbType').change(function () {
     let type = $('#cmbType').find('option:selected').text();
@@ -500,9 +512,11 @@ function checkAdvancedAmount() {
 
 $('#sendRequest').click(function () {
     let regNo = $('#cmbRegistrationNo').find('option:selected').text();
-    if (regNo != "" && regNo != "-Select Registration No-") {
+    if (regNo != "" && regNo != "-Select Registration No-" && $('#txtCarPickupDate').val()!="" && $('#txtCarReturnDate').val()!="") {
         let custId = $('#txtCustId').val();
         searchCustomerById(custId);
+    } else {
+        alert("Please fill rental fields");
     }
 })
 
