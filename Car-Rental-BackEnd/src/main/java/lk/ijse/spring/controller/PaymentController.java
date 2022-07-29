@@ -30,6 +30,7 @@ public class PaymentController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseUtil savePayment(@RequestBody PaymentDTO dto) {
+        System.out.println(dto.toString());
         service.savePayment(dto);
         return new ResponseUtil(200, "Saved", null);
     }
@@ -71,5 +72,10 @@ public class PaymentController {
     public ResponseUtil deletePaymentByRentId(@PathVariable String rentId){
         service.deletePaymentByRentId(rentId);
         return new ResponseUtil(200,"deleted",null);
+    }
+
+    @GetMapping(path = "/calculatePaidPayment/{rentId}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil calculatePaidPayment(@PathVariable String rentId){
+        return new ResponseUtil(200,"Ok",service.calculatePaidPayments(rentId));
     }
 }

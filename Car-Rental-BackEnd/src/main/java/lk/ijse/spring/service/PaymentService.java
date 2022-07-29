@@ -27,4 +27,6 @@ public interface PaymentService {
     String generatePaymentId();
 
     void deletePaymentByRentId(String rentId);
+
+    double calculatePaidPayments(String rentId);
 }

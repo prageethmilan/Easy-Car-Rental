@@ -27,7 +27,8 @@ public class CarRentReturnController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseUtil saveCarRentReturn(CarRentReturnDTO dto) {
+    public ResponseUtil saveCarRentReturn(@RequestBody CarRentReturnDTO dto) {
+        System.out.println(dto.toString());
         service.saveCarRentReturn(dto);
         return new ResponseUtil(200, "Saved", null);
     }

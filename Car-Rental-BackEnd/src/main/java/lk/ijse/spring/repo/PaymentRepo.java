@@ -31,4 +31,7 @@ public interface PaymentRepo extends JpaRepository<Payment, String> {
     void deletePaymentByRentId(@Param("rentID") String rentID);*/
 
     void deleteAllByRentalRentId(String rentID);
+
+    @Query(value = "SELECT SUM(amount) FROM Payment WHERE rentID=:rentID",nativeQuery = true)
+    double getSumOfPaidPayments(@Param("rentID") String rentID);
 }

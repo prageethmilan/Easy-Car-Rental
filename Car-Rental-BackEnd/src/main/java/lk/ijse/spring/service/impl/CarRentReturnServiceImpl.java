@@ -28,6 +28,7 @@ public class CarRentReturnServiceImpl implements CarRentReturnService {
 
     @Override
     public void saveCarRentReturn(CarRentReturnDTO dto) {
+        System.out.println(dto.toString());
         if (!repo.existsById(dto.getReturnId())) {
             repo.save(mapper.map(dto, CarRentReturn.class));
         } else {

@@ -112,4 +112,13 @@ public class PaymentServiceImpl implements PaymentService {
             throw new RuntimeException("Payment Not Found");
         }
     }
+
+    @Override
+    public double calculatePaidPayments(String rentId) {
+        if (repo.existsByRentalRentId(rentId)){
+            return repo.getSumOfPaidPayments(rentId);
+        } else {
+            throw new RuntimeException("No Payment Found");
+        }
+    }
 }

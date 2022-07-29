@@ -22,6 +22,8 @@ $(function () {
     generateMaintenanceId();
     loadAllUnderMaintenanceCars();
     loadAllMaintenances();
+    generatePaymentID();
+    generateReturnId();
 });
 
 let today = new Date().toISOString().slice(0, 10);
@@ -48,6 +50,7 @@ let regRentId = /^(RT0-)[0-9]{4}$/;
 let regDetails = /^[A-z0-9 &.,/]{4,}$/;
 
 $('#txtToday').val(today);
+$('#txtTodayDate').val(today);
 
 function getRegisterCustomersCount() {
     $.ajax({
@@ -1603,6 +1606,7 @@ $('#btnSearchDriver').click(function () {
 
 function loadAllRentals() {
     $('#tblCarRentals').empty();
+    $('#tableCarRental').empty();
     $.ajax({
         url: baseUrl + "api/v1/CarRent",
         method: "GET",
@@ -1610,10 +1614,13 @@ function loadAllRentals() {
             for (const carRent of res.data) {
                 let row = `<tr><td>${carRent.rentId}</td><td>${carRent.date}</td><td>${carRent.pickUpDate}</td><td>${carRent.returnDate}</td><td>${carRent.car.registrationNO}</td><td>${carRent.customer.customerId}</td><td>${carRent.driver.licenceNo}</td><td>${carRent.status}</td></tr>`;
                 $('#tblCarRentals').append(row);
+                $('#tableCarRental').append(row);
             }
         }
     })
 }
+
+$('')
 
 function loadAllPayments() {
     $('#tblPayments').empty();
@@ -2034,8 +2041,8 @@ function loadAllMaintenances() {
 
 $('#txtCarRegNo').on('keyup', function (event) {
     checkCarRegNo();
-    if (event.key==="Enter"){
-        if (regRegNo.test($('#txtCarRegNo').val())){
+    if (event.key === "Enter") {
+        if (regRegNo.test($('#txtCarRegNo').val())) {
             $('#txtCost').focus();
         } else {
             $('#txtCarRegNo').focus();
@@ -2056,8 +2063,8 @@ function checkCarRegNo() {
 
 $('#txtCost').on('keyup', function (event) {
     checkCarMaintenanceCost();
-    if (event.key==="Enter"){
-        if (regDailyRate.test($('#txtCost').val())){
+    if (event.key === "Enter") {
+        if (regDailyRate.test($('#txtCost').val())) {
             $('#txtMaintenanceDetails').focus();
         } else {
             $('#txtCost').focus();
@@ -2129,11 +2136,11 @@ function addPaymentToMaintenance(car) {
     }
 
     $.ajax({
-        url:baseUrl + "api/v1/maintenance",
-        method:"POST",
-        contentType:"application/json",
-        data:JSON.stringify(maintenance),
-        success:function (res) {
+        url: baseUrl + "api/v1/maintenance",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(maintenance),
+        success: function (res) {
             updateCarStatusToAvailable(car.registrationNO);
         }
     })
@@ -2143,9 +2150,9 @@ function updateCarStatusToAvailable(registrationNo) {
     let status = "Available";
 
     $.ajax({
-        url:baseUrl + "api/v1/car/updateCarStatus/" + registrationNo + "/" + status,
-        method:"PUT",
-        success:function (res) {
+        url: baseUrl + "api/v1/car/updateCarStatus/" + registrationNo + "/" + status,
+        method: "PUT",
+        success: function (res) {
             getAvailableCarCount();
             loadAllCars();
             loadAllUnderMaintenanceCars();
@@ -2184,3 +2191,356 @@ $('#btnClearPaid').click(function () {
     loadAllMaintenances();
     loadAllUnderMaintenanceCars();
 })
+
+function generatePaymentID() {
+    $.ajax({
+        url: baseUrl + "api/v1/payment/generatePaymentId",
+        method: "GET",
+        success: function (res) {
+            $('#txtReturnPaymentId').val(res.data);
+        }
+    })
+}
+
+function generateReturnId() {
+    $.ajax({
+        url: baseUrl + "api/v1/carRentReturn/generateReturnId",
+        method: "GET",
+        success: function (res) {
+            $('#txtReturnId').val(res.data);
+        }
+    })
+}
+
+$('#txtSearchRentId').on('keyup', function (event) {
+    checkSearchRentalId();
+    if (event.key === "Enter") {
+        if (regRentId.test($('#txtSearchRentId').val())) {
+            searchCarRent();
+        } else {
+            $('#txtSearchRentId').focus();
+        }
+    }
+})
+
+function checkSearchRentalId() {
+    let rentId = $('#txtSearchRentId').val();
+    if (regRentId.test(rentId)) {
+        $('#txtSearchRentId').css('border', '2px solid green');
+        return true;
+    } else {
+        $('#txtSearchRentId').css('border', '2px solid red');
+        return false;
+    }
+}
+
+function searchCarRent() {
+    let rentId = $('#txtSearchRentId').val();
+    $.ajax({
+        url: baseUrl + "api/v1/CarRent/" + rentId,
+        method: "GET",
+        success: function (res) {
+            let carRent = res.data;
+
+            $('#txtPickDate').val(carRent.pickUpDate);
+            $('#txtRDate').val(carRent.returnDate);
+
+            calculateTotalPaidPayments(carRent);
+        },
+        error: function (ob) {
+            swal({
+                title: "Error!",
+                text: "Booking Not Found",
+                icon: "error",
+                button: "Close",
+                timer: 2000
+            });
+        }
+    })
+}
+
+function calculateTotalPaidPayments(carRent) {
+    $.ajax({
+        url: baseUrl + "api/v1/payment/calculatePaidPayment/" + carRent.rentId,
+        method: "GET",
+        success: function (res) {
+            $('#txtTotalPaidAmount').val(res.data);
+            var pickupDate = new Date(carRent.pickUpDate);
+            var day = new Date(today);
+            var differenceInTime = day.getTime() - pickupDate.getTime();
+            var differenceIndays = differenceInTime / (1000 * 3600 * 24);
+
+            searchCarDailyRate(carRent.car.registrationNO, differenceIndays);
+        }
+    })
+}
+
+function searchCarDailyRate(registrationNo, days) {
+    $.ajax({
+        url: baseUrl + "api/v1/car/" + registrationNo,
+        method: "GET",
+        success: function (res) {
+            let car = res.data;
+            let dailyRate = car.dailyRate;
+            let cost = dailyRate * days;
+            $('#txtRentForUseDates').val(cost);
+        }
+    })
+}
+
+$('#txtDamageCost').on('keyup', function (event) {
+    checkDamageCost();
+    if (event.key === "Enter") {
+        if (regDailyRate.test($('#txtDamageCost').val())) {
+            $('#txtTotalKm').focus()
+        } else {
+            $('#txtDamageCost').focus();
+        }
+    }
+})
+
+function checkDamageCost() {
+    let cost = $('#txtDamageCost').val();
+    if (regDailyRate.test(cost)) {
+        $('#txtDamageCost').css('border', '2px solid green');
+    } else {
+        $('#txtDamageCost').css('border', '2px solid red');
+    }
+}
+
+$('#txtTotalKm').on('keyup', function (event) {
+    checkTotalKm();
+    calculateTotalPriceForExtraKm();
+    if (event.key === "Enter") {
+        if (regCompleteKm.test($('#txtTotalKm').val())) {
+            $('#txtTotalPriceForExtraKm').focus()
+        } else {
+            $('#txtTotalKm').focus();
+        }
+    }
+})
+
+function checkTotalKm() {
+    let km = $('#txtTotalKm').val();
+    if (regCompleteKm.test(km)) {
+        $('#txtTotalKm').css('border', '2px solid green');
+    } else {
+        $('#txtTotalKm').css('border', '2px solid red');
+    }
+}
+
+function calculateTotalPriceForExtraKm() {
+    let rentId = $('#txtSearchRentId').val();
+    $.ajax({
+        url: baseUrl + "api/v1/CarRent/" + rentId,
+        method: "GET",
+        success: function (res) {
+            let carRent = res.data;
+            searchCarForCalculatePriceForExtraKm(carRent.car.registrationNO);
+        }
+    })
+}
+
+function searchCarForCalculatePriceForExtraKm(registrationNo) {
+    $.ajax({
+        url: baseUrl + "api/v1/car/" + registrationNo,
+        method: "GET",
+        success: function (res) {
+            let car = res.data;
+            let completeKm = car.completeKm;
+            let freeKmForPrice = car.freeKmForPrice;
+            let totalKm = $('#txtTotalKm').val();
+            if (completeKm < totalKm) {
+                let extraKm = totalKm - completeKm;
+                if (freeKmForPrice < extraKm) {
+                    let excess = extraKm - freeKmForPrice;
+                    let priceForExtra = car.priceForExtraKm * excess;
+                    $('#txtTotalPriceForExtraKm').val(priceForExtra);
+                }
+            } else {
+                $('#txtTotalPriceForExtraKm').val("0.0");
+            }
+        }
+    })
+}
+
+$('#btnCalPayment').click(function () {
+    if ($('#txtSearchRentId').val() != "") {
+        calculatePayments();
+    } else {
+        alert("Please select a booking");
+    }
+})
+
+function calculatePayments() {
+    let rfu = $('#txtRentForUseDates').val();
+    let tpa = $('#txtTotalPaidAmount').val();
+    let dc = $('#txtDamageCost').val();
+    let tpfek = $('#txtTotalPriceForExtraKm').val();
+    let rentForUseDates = parseFloat(rfu);
+    let totalPaidAmount = parseFloat(tpa);
+    let damageCost = parseFloat(dc);
+    let totalPriceForExtraKm = parseFloat(tpfek);
+
+    let totalPayments = rentForUseDates + damageCost + totalPriceForExtraKm;
+    let balance = totalPayments - totalPaidAmount;
+
+    $('#txtTotalPayments').val(totalPayments);
+    $('#txtBalance').val(balance);
+}
+
+$('#btnSubmitPayment').click(function () {
+    if ($('#txtSearchRentId').val() != "" && $('#txtTotalPayments').val() != "" && $('#txtBalance').val() != "") {
+        submitPayment();
+    } else {
+        alert("Please select a booking and calculate payment");
+    }
+})
+
+function submitPayment() {
+    let rentId = $('#txtSearchRentId').val();
+    if (rentId != null) {
+        searchCarRentForPayment(rentId);
+    }
+}
+
+function searchCarRentForPayment(rentId) {
+    $.ajax({
+        url: baseUrl + "api/v1/CarRent/" + rentId,
+        method: "GET",
+        success: function (res) {
+            let carRent = res.data;
+            console.log(carRent);
+            addPayment(carRent);
+        }
+    })
+}
+
+function addPayment(carRent) {
+    /*$.ajax({
+        url: baseUrl + "api/v1/customer/" + id,
+        method: "GET",
+        success: function (res) {
+            let customer = res.data;
+            /!*console.log(customer.customerId);*!/
+            /!*savePayment(carRent, customer);*!/
+        }
+    })*/
+    let paymentId = $('#txtReturnPaymentId').val();
+    let date = $('#txtTodayDate').val();
+    let balance = $('#txtBalance').val();
+
+    var payment = {
+        paymentId: paymentId,
+        date: date,
+        amount: balance,
+        rental: carRent,
+        customer: carRent.customer
+    }
+
+    $.ajax({
+        url: baseUrl + "api/v1/payment",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(payment),
+        success: function (res) {
+            console.log("Success");
+            addCarRentReturn(carRent, payment);
+        }
+    })
+}
+
+/*function getPayment(carRent, paymentId) {
+    $.ajax({
+        url:baseUrl + "api/v1/payment/" + paymentId,
+        method:"GET",
+        success:function (res) {
+            let payment = res.data;
+            addCarRentReturn(carRent,payment);
+        }
+    })
+}*/
+
+function addCarRentReturn(carRent, payment) {
+
+    let date = $('#txtTodayDate').val();
+    let returnId = $('#txtReturnId').val();
+    let totalKm = $('#txtTotalKm').val();
+
+    console.log(payment);
+    console.log(carRent);
+    var carRentReturn = {
+        returnId: returnId,
+        date: date,
+        noOfKm: totalKm,
+        rental: carRent,
+        payment: payment
+    }
+
+
+    $.ajax({
+        url: baseUrl + "api/v1/carRentReturn",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(carRentReturn),
+        success: function (res) {
+            generateReturnId();
+            generatePaymentID();
+            updateCarRentFinished(carRent.rentId);
+            updateCStatus(carRent.car.registrationNO);
+            updateDStatus(carRent.driver.licenceNo);
+            loadAllPayments();
+
+            swal({
+                title: "Confirmation!",
+                text: "Payment Submit",
+                icon: "success",
+                button: "Close",
+                timer: 2000
+            });
+        }
+    })
+}
+
+function updateCarRentFinished(rentId) {
+    let status = "Finished";
+
+    $.ajax({
+        url: baseUrl + "api/v1/CarRent/" + rentId + "/" + status,
+        method: "PUT",
+        success: function (res) {
+            console.log("updated");
+            loadAllRentals();
+            loadTodayBookings();
+        }
+    })
+}
+
+function updateCStatus(registrationNO) {
+    let status = "Available";
+
+    $.ajax({
+        url: baseUrl + "api/v1/car/updateCarStatus/" + registrationNO + "/" + status,
+        method: "PUT",
+        success: function (res) {
+            getAvailableCarCount();
+            getReservedCarsCount();
+            loadAllCars();
+        }
+    })
+}
+
+function updateDStatus(licenceNo) {
+
+    $.ajax({
+        url: baseUrl + "api/v1/driver/updateAvailable/" + licenceNo,
+        method: "PUT",
+        success: function (res) {
+            getAvailableDriverCount();
+            getOccupiedDriverCount();
+            loadAllDrivers();
+            loadAvailableDrivers();
+            loadNonAvailableDrivers();
+        }
+    })
+}
