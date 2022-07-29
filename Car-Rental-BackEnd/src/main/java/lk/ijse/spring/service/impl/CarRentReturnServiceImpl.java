@@ -30,7 +30,8 @@ public class CarRentReturnServiceImpl implements CarRentReturnService {
     public void saveCarRentReturn(CarRentReturnDTO dto) {
         System.out.println(dto.toString());
         if (!repo.existsById(dto.getReturnId())) {
-            repo.save(mapper.map(dto, CarRentReturn.class));
+            repo.save(mapper.map(dto,CarRentReturn.class));
+//            repo.saveCarRentReturn(dto.getReturnId(), dto.getDate(), dto.getNoOfKm(), dto.getPayment().getPaymentId(), dto.getRental().getRentId());
         } else {
             throw new RuntimeException("CarRentReturn Already Exists...");
         }

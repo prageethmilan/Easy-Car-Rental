@@ -55,9 +55,9 @@ function getAllUserData(username, password) {
 function loadMyAllPayments(customerId) {
     $('#paymentsTable').empty();
     $.ajax({
-        url:"http://localhost:8080/Car_Rental_BackEnd_war/api/v1/payment/getAll/"+customerId,
-        method:"GET",
-        success:function (res) {
+        url: "http://localhost:8080/Car_Rental_BackEnd_war/api/v1/payment/getAll/" + customerId,
+        method: "GET",
+        success: function (res) {
             console.log("Payments");
             for (let payment of res.data) {
                 console.log(payment);
@@ -111,7 +111,13 @@ function loadMyCarRentsToTable(customerId) {
         method: "GET",
         success: function (res) {
             for (const carRent of res.data) {
-                let row = `<tr><td>${carRent.rentId}</td><td>${carRent.date}</td><td>${carRent.pickUpDate}</td><td>${carRent.returnDate}</td><td>${carRent.car.registrationNO}</td><td>${carRent.customer.customerId}</td><td>${carRent.driver.licenceNo}</td><td>${carRent.status}</td></tr>`;
+                let licence;
+                if (carRent.driver === null) {
+                    licence = "No Driver";
+                } else {
+                    licence = carRent.driver.licenceNo;
+                }
+                let row = `<tr><td>${carRent.rentId}</td><td>${carRent.date}</td><td>${carRent.pickUpDate}</td><td>${carRent.returnDate}</td><td>${carRent.car.registrationNO}</td><td>${carRent.customer.customerId}</td><td>${licence}</td><td>${carRent.status}</td></tr>`;
                 $('#allCarRentalsTable').append(row);
                 $('#bookingResponsesTable').append(row);
             }
@@ -525,14 +531,22 @@ function searchCarByRegNo(customer) {
 
 function searchDriverByLicenceNo(customer, car) {
     let licenceNo = $('#txtDriverLicenceNo').val();
-    $.ajax({
-        url: baseUrl + "api/v1/driver/" + licenceNo,
-        method: "GET",
-        success: function (res) {
-            let driver = res.data;
-            addCarRent(customer, car, driver);
-        }
-    })
+    if ($('#txtDriverLicenceNo').val() === "") {
+        licenceNo = null;
+    }
+    if (licenceNo != null) {
+        $.ajax({
+            url: baseUrl + "api/v1/driver/" + licenceNo,
+            method: "GET",
+            success: function (res) {
+                let driver = res.data;
+                console.log(res.data);
+                addCarRent(customer, car, driver);
+            }
+        })
+    } else {
+        addCarRent(customer, car, null);
+    }
 }
 
 function addCarRent(customer, car, driver) {
@@ -542,7 +556,6 @@ function addCarRent(customer, car, driver) {
     let pickupDate = $('#txtCarPickupDate').val();
     let returnDate = $('#txtCarReturnDate').val();
     let status = "Pending";
-
     var carRent = {
         rentId: rentId,
         date: today,
@@ -571,7 +584,7 @@ function addCarRent(customer, car, driver) {
                 timer: 2000
             });
         },
-        error:function (ob) {
+        error: function (ob) {
             swal({
                 title: "Error",
                 text: "Error Occured.Please Try Again.",
@@ -629,7 +642,9 @@ function addAdvancedPayment(carRent, customer) {
     let paymentId = $('#txtPaymentId').val();
     let today = $('#txtCarTodayDate').val();
     let amount = $('#txtPaymentAmount').val();
-
+    if ($('#txtPaymentAmount').val() === "") {
+        amount = 0.0;
+    }
     var payment = {
         paymentId: paymentId,
         date: today,
@@ -701,7 +716,7 @@ function cancleRental() {
         url: baseUrl + "api/v1/CarRent/" + rentId + "/" + status,
         method: "PUT",
         success: function (res) {
-            deletePayment(rentId,licenceNo,registrationNo,customerId);
+            deletePayment(rentId, licenceNo, registrationNo, customerId);
             // loadMyCarRentsToTable(customerId);
             swal({
                 title: "Confirmation",
@@ -742,14 +757,14 @@ function clearCarRentResponseFields() {
     $('#txtRentCustId').val("");
 }
 
-function deletePayment(rentId,licenceNo,registrationNo,customerId) {
+function deletePayment(rentId, licenceNo, registrationNo, customerId) {
     $.ajax({
-        url:baseUrl + "api/v1/payment/delete/" + rentId,
-        method:"DELETE",
-        success:function (res) {
+        url: baseUrl + "api/v1/payment/delete/" + rentId,
+        method: "DELETE",
+        success: function (res) {
             console.log("Deleted Payment");
             let status = "Available";
-            updateCarStatusByRegNo(status,registrationNo);
+            updateCarStatusByRegNo(status, registrationNo);
             updateDriverStatusByLicenceNo(licenceNo);
             loadMyCarRentsToTable(customerId);
             generateRentId();
@@ -760,12 +775,11 @@ function deletePayment(rentId,licenceNo,registrationNo,customerId) {
 }
 
 
-
-function updateCarStatusByRegNo(status,registrationNo) {
+function updateCarStatusByRegNo(status, registrationNo) {
     $.ajax({
-        url:baseUrl + "api/v1/car/updateCarStatus/" + registrationNo + "/" + status,
-        method:"PUT",
-        success:function (res) {
+        url: baseUrl + "api/v1/car/updateCarStatus/" + registrationNo + "/" + status,
+        method: "PUT",
+        success: function (res) {
             console.log("Update Car Status");
         }
     })
@@ -773,9 +787,9 @@ function updateCarStatusByRegNo(status,registrationNo) {
 
 function updateDriverStatusByLicenceNo(licenceNo) {
     $.ajax({
-        url:baseUrl + "api/v1/driver/updateAvailable/" + licenceNo,
-        method:"PUT",
-        success:function (res) {
+        url: baseUrl + "api/v1/driver/updateAvailable/" + licenceNo,
+        method: "PUT",
+        success: function (res) {
             console.log("Update Driver Status");
         }
     })

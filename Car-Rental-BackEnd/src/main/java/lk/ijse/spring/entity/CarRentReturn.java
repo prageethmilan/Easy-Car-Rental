@@ -24,7 +24,7 @@ public class CarRentReturn {
     private String date;
     private double noOfKm;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = {CascadeType.DETACH,CascadeType.REFRESH})
     @JoinColumn(name = "rentId", referencedColumnName = "rentId", nullable = false)
     private CarRent rental;
 

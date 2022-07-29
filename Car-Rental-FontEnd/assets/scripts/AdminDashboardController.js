@@ -24,6 +24,7 @@ $(function () {
     loadAllMaintenances();
     generatePaymentID();
     generateReturnId();
+    loadAllAcceptedRentals();
 });
 
 let today = new Date().toISOString().slice(0, 10);
@@ -173,8 +174,13 @@ function loadTodayBookings() {
         method: "GET",
         success: function (res) {
             for (const booking of res.data) {
-                console.log(booking);
-                let row = `<tr><td>${booking.rentId}</td><td>${booking.date}</td><td>${booking.pickUpDate}</td><td>${booking.returnDate}</td><td>${booking.customer.customerId}</td><td>${booking.car.registrationNO}</td><td>${booking.driver.licenceNo}</td><td>${booking.status}</td></tr>`;
+                let licence;
+                if (booking.driver === null) {
+                    licence = "No Driver";
+                } else {
+                    licence = booking.driver.licenceNo;
+                }
+                let row = `<tr><td>${booking.rentId}</td><td>${booking.date}</td><td>${booking.pickUpDate}</td><td>${booking.returnDate}</td><td>${booking.customer.customerId}</td><td>${booking.car.registrationNO}</td><td>${licence}</td><td>${booking.status}</td></tr>`;
                 $('#todayBookingTable').append(row);
             }
         }
@@ -1606,21 +1612,44 @@ $('#btnSearchDriver').click(function () {
 
 function loadAllRentals() {
     $('#tblCarRentals').empty();
-    $('#tableCarRental').empty();
     $.ajax({
         url: baseUrl + "api/v1/CarRent",
         method: "GET",
         success: function (res) {
             for (const carRent of res.data) {
-                let row = `<tr><td>${carRent.rentId}</td><td>${carRent.date}</td><td>${carRent.pickUpDate}</td><td>${carRent.returnDate}</td><td>${carRent.car.registrationNO}</td><td>${carRent.customer.customerId}</td><td>${carRent.driver.licenceNo}</td><td>${carRent.status}</td></tr>`;
+                let licence;
+                if (carRent.driver === null) {
+                    licence = "No Driver";
+                } else {
+                    licence = carRent.driver.licenceNo;
+                }
+                let row = `<tr><td>${carRent.rentId}</td><td>${carRent.date}</td><td>${carRent.pickUpDate}</td><td>${carRent.returnDate}</td><td>${carRent.car.registrationNO}</td><td>${carRent.customer.customerId}</td><td>${licence}</td><td>${carRent.status}</td></tr>`;
                 $('#tblCarRentals').append(row);
-                $('#tableCarRental').append(row);
             }
         }
     })
 }
 
-$('')
+function loadAllAcceptedRentals() {
+    let status = "Accepted";
+    $('#tableCarRental').empty();
+    $.ajax({
+        url:baseUrl + "api/v1/CarRent/get/" + status,
+        method:"GET",
+        success:function (res) {
+            for (const carRent of res.data) {
+                let licence;
+                if (carRent.driver === null) {
+                    licence = "No Driver";
+                } else {
+                    licence = carRent.driver.licenceNo;
+                }
+                let row = `<tr><td>${carRent.rentId}</td><td>${carRent.date}</td><td>${carRent.pickUpDate}</td><td>${carRent.returnDate}</td><td>${carRent.car.registrationNO}</td><td>${carRent.customer.customerId}</td><td>${licence}</td><td>${carRent.status}</td></tr>`;
+                $('#tableCarRental').append(row);
+            }
+        }
+    })
+}
 
 function loadAllPayments() {
     $('#tblPayments').empty();
@@ -1705,7 +1734,13 @@ function loadPendingRentals() {
         method: "GET",
         success: function (res) {
             for (const carRent of res.data) {
-                let row = `<tr><td>${carRent.rentId}</td><td>${carRent.date}</td><td>${carRent.pickUpDate}</td><td>${carRent.returnDate}</td><td>${carRent.car.registrationNO}</td><td>${carRent.customer.customerId}</td><td>${carRent.driver.licenceNo}</td><td>${carRent.status}</td></tr>`;
+                let licence;
+                if (carRent.driver === null) {
+                    licence = "No Driver";
+                } else {
+                    licence = carRent.driver.licenceNo;
+                }
+                let row = `<tr><td>${carRent.rentId}</td><td>${carRent.date}</td><td>${carRent.pickUpDate}</td><td>${carRent.returnDate}</td><td>${carRent.car.registrationNO}</td><td>${carRent.customer.customerId}</td><td>${licence}</td><td>${carRent.status}</td></tr>`;
                 $('#tblCarRentalRequests').append(row);
             }
             bindCarRentalRequestTableClickEvents();
@@ -1796,17 +1831,19 @@ function updateCarStatus() {
 function updateDriverStatus() {
     let licenceNo = $('#txtDLicenceNo').val();
 
-    $.ajax({
-        url: baseUrl + "api/v1/driver/updateNonAvailable/" + licenceNo,
-        method: "PUT",
-        success: function (res) {
-            loadAvailableDrivers();
-            loadNonAvailableDrivers();
-            loadAllDrivers();
-            getAvailableDriverCount();
-            getOccupiedDriverCount();
-        }
-    })
+    if (licenceNo != "No Driver") {
+        $.ajax({
+            url: baseUrl + "api/v1/driver/updateNonAvailable/" + licenceNo,
+            method: "PUT",
+            success: function (res) {
+                loadAvailableDrivers();
+                loadNonAvailableDrivers();
+                loadAllDrivers();
+                getAvailableDriverCount();
+                getOccupiedDriverCount();
+            }
+        })
+    }
 }
 
 function clearRentalRequestFields() {
@@ -2488,8 +2525,11 @@ function addCarRentReturn(carRent, payment) {
             generatePaymentID();
             updateCarRentFinished(carRent.rentId);
             updateCStatus(carRent.car.registrationNO);
-            updateDStatus(carRent.driver.licenceNo);
+            if (carRent.driver!=null) {
+                updateDStatus(carRent.driver.licenceNo);
+            }
             loadAllPayments();
+            clearCarRentReturnFields();
 
             swal({
                 title: "Confirmation!",
@@ -2502,6 +2542,24 @@ function addCarRentReturn(carRent, payment) {
     })
 }
 
+function clearCarRentReturnFields() {
+    $('#txtSearchRentId').val("");
+    $('#txtTotalPaidAmount').val("");
+    $('#txtPickDate').val("");
+    $('#txtRDate').val("");
+    $('#txtRentalCustId').val("");
+    $('#txtRentForUseDates').val("");
+    $('#txtDamageCost').val("");
+    $('#txtTotalKm').val("");
+    $('#txtTotalPriceForExtraKm').val("");
+    $('#txtTotalPayments').val("");
+    $('#txtBalance').val("");
+
+    $('#txtSearchRentId').css('border', '1px solid #ced4da');
+    $('#txtDamageCost').css('border', '1px solid #ced4da');
+    $('#txtTotalKm').css('border', '1px solid #ced4da');
+}
+
 function updateCarRentFinished(rentId) {
     let status = "Finished";
 
@@ -2512,6 +2570,7 @@ function updateCarRentFinished(rentId) {
             console.log("updated");
             loadAllRentals();
             loadTodayBookings();
+            loadAllAcceptedRentals();
         }
     })
 }
@@ -2544,3 +2603,7 @@ function updateDStatus(licenceNo) {
         }
     })
 }
+
+$('#btnClearPayment').click(function () {
+    clearCarRentReturnFields();
+})
