@@ -34,4 +34,7 @@ public interface PaymentRepo extends JpaRepository<Payment, String> {
 
     @Query(value = "SELECT SUM(amount) FROM Payment WHERE rentID=:rentID",nativeQuery = true)
     double getSumOfPaidPayments(@Param("rentID") String rentID);
+
+    @Query(value = "SELECT SUM(amount) FROM Payment WHERE date BETWEEN :fromDate AND :toDate",nativeQuery = true)
+    double getSumOfPaymentAmount(@Param("fromDate") String fromDate,@Param("toDate") String toDate);
 }

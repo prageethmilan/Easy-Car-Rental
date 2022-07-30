@@ -24,4 +24,8 @@ public interface MaintenanceService {
     void updateMaintenanceCost(String maintenanceId, double cost);
 
     List<MaintenanceDTO> getAllUnderMaintenances();
+
+    List<MaintenanceDTO> getAllMaintenancesByDateRange(String fromDate, String toDate);
+
+    double getSumOfMaintenanceAmount(String fromDate, String toDate);
 }

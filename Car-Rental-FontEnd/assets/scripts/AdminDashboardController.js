@@ -1634,9 +1634,9 @@ function loadAllAcceptedRentals() {
     let status = "Accepted";
     $('#tableCarRental').empty();
     $.ajax({
-        url:baseUrl + "api/v1/CarRent/get/" + status,
-        method:"GET",
-        success:function (res) {
+        url: baseUrl + "api/v1/CarRent/get/" + status,
+        method: "GET",
+        success: function (res) {
             for (const carRent of res.data) {
                 let licence;
                 if (carRent.driver === null) {
@@ -2526,7 +2526,7 @@ function addCarRentReturn(carRent, payment) {
             generatePaymentID();
             updateCarRentFinished(carRent.rentId);
             updateCStatus(carRent.car.registrationNO);
-            if (carRent.driver!=null) {
+            if (carRent.driver != null) {
                 updateDStatus(carRent.driver.licenceNo);
             }
             loadAllPayments();
@@ -2607,4 +2607,83 @@ function updateDStatus(licenceNo) {
 
 $('#btnClearPayment').click(function () {
     clearCarRentReturnFields();
+})
+
+
+/*-----------------------------------------------Income Reports---------------------------------------------------------*/
+
+$('#btnSearchIncome').click(function () {
+    if ($('#incomeFromDate').val() != "") {
+        if ($('#incomeToDate').val() != "") {
+            let fromDate = $('#incomeFromDate').val();
+            let toDate = $('#incomeToDate').val();
+            searchPaymentsAndIncome(fromDate, toDate);
+        } else {
+            alert("Please select to date");
+        }
+    } else {
+        alert("Please select from date");
+    }
+})
+
+function searchPaymentsAndIncome(fromDate, toDate) {
+    searchPayments(fromDate,toDate);
+    searchMaintenances(fromDate,toDate);
+}
+
+function searchPayments(fromDate, toDate) {
+    $('#tblPaymentsInDateRange').empty();
+    $.ajax({
+        url:baseUrl + "api/v1/payment/" + fromDate + "/" + toDate,
+        method:"GET",
+        success:function (res) {
+            let amount = 0.0;
+            for (let payment of res.data) {
+                amount = amount + payment.amount;
+                let row = `<tr><td>${payment.paymentId}</td><td>${payment.date}</td><td>${payment.amount}</td><td>${payment.rental.rentId}</td><td>${payment.customer.customerId}</td></tr>`;
+                $('#tblPaymentsInDateRange').append(row);
+            }
+            $('#lblTotalPayments').text(amount);
+        }
+    })
+}
+
+function searchMaintenances(fromDate, toDate) {
+    $('#tblMaintenancesInDateRange').empty();
+    $.ajax({
+        url:baseUrl + "api/v1/maintenance/getAll/" + fromDate + "/" + toDate,
+        method:"GET",
+        success:function (res) {
+            let cost = 0.0;
+            for (let maintenance of res.data) {
+                cost = cost + maintenance.cost;
+                let row = `<tr><td>${maintenance.maintenanceId}</td><td>${maintenance.date}</td><td>${maintenance.cost}</td><td>${maintenance.details}</td><td>${maintenance.car.registrationNO}</td></tr>`;
+                $('#tblMaintenancesInDateRange').append(row);
+            }
+            $('#lblTotalMaintenanceCost').text(cost);
+            setTimeout(calculateIncome,50);
+        }
+    })
+}
+
+function calculateIncome() {
+    let payments = $('#lblTotalPayments').text();
+    let maintenances = $('#lblTotalMaintenanceCost').text();
+
+    var doubPayments = parseFloat(payments);
+    var doubMaintenances = parseFloat(maintenances);
+
+    var income = doubPayments - doubMaintenances;
+
+    $('#lblTotalIncome').text(income);
+}
+
+$('#btnClearIncome').click(function () {
+    $('#incomeFromDate').val("");
+    $('#incomeToDate').val("");
+    $('#tblPaymentsInDateRange').empty();
+    $('#tblMaintenancesInDateRange').empty();
+    $('#lblTotalPayments').text("0");
+    $('#lblTotalMaintenanceCost').text("0");
+    $('#lblTotalIncome').text("0");
 })

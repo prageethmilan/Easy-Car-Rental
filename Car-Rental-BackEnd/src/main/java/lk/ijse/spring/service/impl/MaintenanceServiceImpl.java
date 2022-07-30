@@ -106,4 +106,15 @@ public class MaintenanceServiceImpl implements MaintenanceService {
         return mapper.map(repo.getAllUnderMaintenances(), new TypeToken<List<MaintenanceDTO>>() {
         }.getType());
     }
+
+    @Override
+    public List<MaintenanceDTO> getAllMaintenancesByDateRange(String fromDate, String toDate) {
+        return mapper.map(repo.getAllMaintenancesByDateRange(fromDate, toDate), new TypeToken<List<MaintenanceDTO>>() {
+        }.getType());
+    }
+
+    @Override
+    public double getSumOfMaintenanceAmount(String fromDate, String toDate) {
+        return repo.getSumOfMaintenanceAmount(fromDate, toDate);
+    }
 }

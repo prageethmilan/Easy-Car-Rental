@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.Path;
 import java.time.LocalDate;
 
 /**
@@ -68,14 +69,19 @@ public class PaymentController {
         return new ResponseUtil(200, "Ok", service.generatePaymentId());
     }
 
-    @DeleteMapping(path = "/delete/{rentId}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseUtil deletePaymentByRentId(@PathVariable String rentId){
+    @DeleteMapping(path = "/delete/{rentId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil deletePaymentByRentId(@PathVariable String rentId) {
         service.deletePaymentByRentId(rentId);
-        return new ResponseUtil(200,"deleted",null);
+        return new ResponseUtil(200, "deleted", null);
     }
 
-    @GetMapping(path = "/calculatePaidPayment/{rentId}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseUtil calculatePaidPayment(@PathVariable String rentId){
-        return new ResponseUtil(200,"Ok",service.calculatePaidPayments(rentId));
+    @GetMapping(path = "/calculatePaidPayment/{rentId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil calculatePaidPayment(@PathVariable String rentId) {
+        return new ResponseUtil(200, "Ok", service.calculatePaidPayments(rentId));
+    }
+
+    @GetMapping(path = "/getSum/{fromDate}/{toDate}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil getSumOfPaymentsCost(@PathVariable String fromDate, @PathVariable String toDate) {
+        return new ResponseUtil(200, "Ok", service.getSumOfPaymentsByDateRange(fromDate, toDate));
     }
 }

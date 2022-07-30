@@ -65,4 +65,14 @@ public class MaintenanceController {
     public ResponseUtil getAllUnderMaintenances() {
         return new ResponseUtil(200, "Ok", service.getAllUnderMaintenances());
     }
+
+    @GetMapping(path = "/getAll/{fromDate}/{toDate}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil getAllMaintenancesByDateRange(@PathVariable String fromDate, @PathVariable String toDate) {
+        return new ResponseUtil(200, "Ok", service.getAllMaintenancesByDateRange(fromDate, toDate));
+    }
+
+    @GetMapping(path = "/sum/{fromDate}/{toDate}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil getSumOfMaintenanceAmount(@PathVariable String fromDate, @PathVariable String toDate) {
+        return new ResponseUtil(200, "Ok", service.getSumOfMaintenanceAmount(fromDate, toDate));
+    }
 }

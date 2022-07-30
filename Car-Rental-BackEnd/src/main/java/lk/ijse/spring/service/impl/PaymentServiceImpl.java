@@ -121,4 +121,9 @@ public class PaymentServiceImpl implements PaymentService {
             throw new RuntimeException("No Payment Found");
         }
     }
+
+    @Override
+    public double getSumOfPaymentsByDateRange(String fromDate, String toDate) {
+        return repo.getSumOfPaymentAmount(fromDate, toDate);
+    }
 }

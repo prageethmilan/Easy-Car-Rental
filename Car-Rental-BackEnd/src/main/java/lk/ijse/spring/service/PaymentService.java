@@ -29,4 +29,6 @@ public interface PaymentService {
     void deletePaymentByRentId(String rentId);
 
     double calculatePaidPayments(String rentId);
+
+    double getSumOfPaymentsByDateRange(String fromDate, String toDate);
 }
