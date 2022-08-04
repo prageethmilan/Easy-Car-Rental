@@ -42,5 +42,5 @@ public interface DriverRepo extends JpaRepository<Driver, String> {
     int getCountOfDriversByStatus(@Param("availability") boolean availability);
 
     @Query(value = "SELECT * FROM Driver WHERE availability=true ORDER BY RAND() LIMIT 1",nativeQuery = true)
-    List<Driver> getRandomCustomer();
+    List<Driver> getRandomDriver();
 }

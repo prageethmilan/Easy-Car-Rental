@@ -121,7 +121,7 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public List<DriverDTO> getRandomDriver() {
-        return mapper.map(repo.getRandomCustomer(), new TypeToken<List<DriverDTO>>() {
+        return mapper.map(repo.getRandomDriver(), new TypeToken<List<DriverDTO>>() {
         }.getType());
     }
 
