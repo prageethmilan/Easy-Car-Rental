@@ -652,11 +652,7 @@ function uploadCarImages(registrationID) {
 function clearAddCarFields() {
     $('#txtRegNo').val("");
     $('#txtBrand').val("");
-    $('#cmbtype').find('option:selected').text("- Select Car Type -");
     $('#txtNoOfPassengers').val("");
-    $('#cmbTransmissionType').find('option:selected').text("- Select Transmission -");
-    $('#cmbfuel').find('option:selected').text("- Select Fuel Type -");
-    $('#cmbColor').find('option:selected').text("- Select Color -");
     $('#txtDailyRate').val("");
     $('#txtMonthlyRate').val("");
     $('#txtFreeKmForPrice').val("");
