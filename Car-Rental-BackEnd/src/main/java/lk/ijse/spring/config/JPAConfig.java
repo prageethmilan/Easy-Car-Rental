@@ -32,14 +32,14 @@ public class JPAConfig {
     @Autowired
     Environment env;
     
-    @Bean
+    /*@Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource ds, JpaVendorAdapter va){
         LocalContainerEntityManagerFactoryBean bean = new LocalContainerEntityManagerFactoryBean();
         bean.setJpaVendorAdapter(va);
         bean.setDataSource(ds);
         bean.setPackagesToScan(env.getRequiredProperty("entity.package.name"));
         return bean;
-    }
+    }*/
 
     @Bean
     public DataSource dataSource() throws NamingException {
