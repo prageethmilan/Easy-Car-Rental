@@ -72,18 +72,18 @@ public class CarController {
     @PutMapping(path = "/up/{registrationID}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseUtil uploadImagesAndPath(@RequestPart("frontImg") MultipartFile frontImg, @RequestPart("backImg") MultipartFile backImg, @RequestPart("interImg") MultipartFile interImg, @RequestPart("sideImg") MultipartFile sideImg, @PathVariable String registrationID) {
         try {
-            String projectPath = String.valueOf(new File("/media/prageeth/Disk D/GitHub Projects/Easy-Car-Rental/Car-Rental-FontEnd/assets/savedImages"));
-            File uploadsDir = new File(projectPath + "/Cars");
+            String projectPath = String.valueOf(new File("H:\\Github Projects\\Easy-Car-Rental\\Car-Rental-FontEnd\\assets\\savedImages"));
+            File uploadsDir = new File(projectPath + "\\Cars");
             uploadsDir.mkdir();
-            frontImg.transferTo(new File(uploadsDir.getAbsolutePath() + "/" + frontImg.getOriginalFilename()));
-            backImg.transferTo(new File(uploadsDir.getAbsolutePath() + "/" + backImg.getOriginalFilename()));
-            interImg.transferTo(new File(uploadsDir.getAbsolutePath() + "/" + interImg.getOriginalFilename()));
-            sideImg.transferTo(new File(uploadsDir.getAbsolutePath() + "/" + sideImg.getOriginalFilename()));
+            frontImg.transferTo(new File(uploadsDir.getAbsolutePath() + "\\" + frontImg.getOriginalFilename()));
+            backImg.transferTo(new File(uploadsDir.getAbsolutePath() + "\\" + backImg.getOriginalFilename()));
+            interImg.transferTo(new File(uploadsDir.getAbsolutePath() + "\\" + interImg.getOriginalFilename()));
+            sideImg.transferTo(new File(uploadsDir.getAbsolutePath() + "\\" + sideImg.getOriginalFilename()));
 
-            String frontImgPath = projectPath + "/Cars/" + frontImg.getOriginalFilename();
-            String backImgPath = projectPath + "/Cars/" + backImg.getOriginalFilename();
-            String interImgPath = projectPath + "/Cars/" + interImg.getOriginalFilename();
-            String sideImgPath = projectPath + "/Cars/" + sideImg.getOriginalFilename();
+            String frontImgPath = projectPath + "\\Cars\\" + frontImg.getOriginalFilename();
+            String backImgPath = projectPath + "\\Cars\\" + backImg.getOriginalFilename();
+            String interImgPath = projectPath + "\\Cars\\" + interImg.getOriginalFilename();
+            String sideImgPath = projectPath + "\\Cars\\" + sideImg.getOriginalFilename();
 
             service.updateCarFilePaths(frontImgPath, backImgPath, interImgPath, sideImgPath, registrationID);
 
