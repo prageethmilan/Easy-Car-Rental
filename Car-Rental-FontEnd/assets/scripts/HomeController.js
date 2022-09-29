@@ -16,8 +16,10 @@ function loadCarDetails() {
                 if (car.type === "General") {
 
                     let path = car.frontView;
-                    let img = path.split("/media/prageeth/Disk D/GitHub Projects/Easy-Car-Rental/Car-Rental-FontEnd/assets/savedImages/Cars/")[1];
-                    let imgSrc = "assets/savedImages/Cars/" + img;
+                    console.log(path)
+                    let img = path.split("H:\\Github Projects\\Easy-Car-Rental\\Car-Rental-FontEnd\\assets\\savedImages\\Cars\\")[1];
+                    console.log(img)
+                    let imgSrc = "assets\\savedImages\\Cars\\" + img;
 
                     let div = `<div class="col" id="card10" data-aos="fade-up" data-aos-anchor-placement="top-bottom"
                      data-aos-delay="500">
@@ -48,8 +50,8 @@ function loadCarDetails() {
 
                 } else if (car.type === "Premium"){
                     let path = car.frontView;
-                    let img = path.split("/media/prageeth/Disk D/GitHub Projects/Easy-Car-Rental/Car-Rental-FontEnd/assets/savedImages/Cars/")[1];
-                    let imgSrc = "assets/savedImages/Cars/" + img;
+                    let img = path.split("H:\\Github Projects\\Easy-Car-Rental\\Car-Rental-FontEnd\\assets\\savedImages\\Cars\\")[1];
+                    let imgSrc = "assets\\savedImages\\Cars\\" + img;
 
                     let div = `<div class="col" id="card10" data-aos="fade-up" data-aos-anchor-placement="top-bottom"
                      data-aos-delay="500">
@@ -80,8 +82,8 @@ function loadCarDetails() {
 
                 } else if (car.type === "Luxury"){
                     let path = car.frontView;
-                    let img = path.split("/media/prageeth/Disk D/GitHub Projects/Easy-Car-Rental/Car-Rental-FontEnd/assets/savedImages/Cars/")[1];
-                    let imgSrc = "assets/savedImages/Cars/" + img;
+                    let img = path.split("H:\\Github Projects\\Easy-Car-Rental\\Car-Rental-FontEnd\\assets\\savedImages\\Cars\\")[1];
+                    let imgSrc = "assets\\savedImages\\Cars\\" + img;
 
                     let div = `<div class="col" id="card10" data-aos="fade-up" data-aos-anchor-placement="top-bottom"
                      data-aos-delay="500">

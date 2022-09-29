@@ -386,20 +386,20 @@ function setCarDataToFields(car) {
     $('#txtCarCompleteKm').val(car.completeKm);
 
     let frontViewPath = car.frontView;
-    let frontViewImg = frontViewPath.split("/media/prageeth/Disk D/GitHub Projects/Easy-Car-Rental/Car-Rental-FontEnd/assets/savedImages/Cars/")[1];
-    let FrontViewImgSrc = "assets/savedImages/Cars/" + frontViewImg;
+    let frontViewImg = frontViewPath.split("H:\\Github Projects\\Easy-Car-Rental\\Car-Rental-FontEnd\\assets\\savedImages\\Cars\\")[1];
+    let FrontViewImgSrc = "assets\\savedImages\\Cars\\" + frontViewImg;
 
     let backViewPath = car.backView;
-    let backViewImg = backViewPath.split("/media/prageeth/Disk D/GitHub Projects/Easy-Car-Rental/Car-Rental-FontEnd/assets/savedImages/Cars/")[1];
-    let backViewImgSrc = "assets/savedImages/Cars/" + backViewImg;
+    let backViewImg = backViewPath.split("H:\\Github Projects\\Easy-Car-Rental\\Car-Rental-FontEnd\\assets\\savedImages\\Cars\\")[1];
+    let backViewImgSrc = "assets\\savedImages\\Cars\\" + backViewImg;
 
     let sideViewPath = car.sideView;
-    let sideViewImg = sideViewPath.split("/media/prageeth/Disk D/GitHub Projects/Easy-Car-Rental/Car-Rental-FontEnd/assets/savedImages/Cars/")[1];
-    let sideViewImgSrc = "assets/savedImages/Cars/" + sideViewImg;
+    let sideViewImg = sideViewPath.split("H:\\Github Projects\\Easy-Car-Rental\\Car-Rental-FontEnd\\assets\\savedImages\\Cars\\")[1];
+    let sideViewImgSrc = "assets\\savedImages\\Cars\\" + sideViewImg;
 
     let interiorViewPath = car.internalView;
-    let interiorViewImg = interiorViewPath.split("/media/prageeth/Disk D/GitHub Projects/Easy-Car-Rental/Car-Rental-FontEnd/assets/savedImages/Cars/")[1];
-    let interiorViewImgSrc = "assets/savedImages/Cars/" + interiorViewImg;
+    let interiorViewImg = interiorViewPath.split("H:\\Github Projects\\Easy-Car-Rental\\Car-Rental-FontEnd\\assets\\savedImages\\Cars\\")[1];
+    let interiorViewImgSrc = "assets\\savedImages\\Cars\\" + interiorViewImg;
 
     let fvImg = `<img src=${FrontViewImgSrc} alt="NIC Front" style="background-size: cover;width: 100%;height: 100%">`;
     $('#divCarFrontView').append(fvImg);
